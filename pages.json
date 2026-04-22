@@ -23,6 +23,12 @@
 			"style": {
 				"navigationBarTitleText": "积分记录"
 			}
+		},
+		{
+			"path": "pages/membership-purchase/index",
+			"style": {
+				"navigationBarTitleText": "开通会员"
+			}
 		}
 	],
 	"globalStyle": {

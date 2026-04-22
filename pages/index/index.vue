@@ -7,14 +7,19 @@
 					<view class="phone-row">
 						<text class="phone">{{ displayPhone }}</text>
 						<view v-if="!member.phoneBound" class="bind-phone" @click.stop="bindPhone">
-							去绑定
+							绑定
 						</view>
 					</view>
-					<view class="hint">{{ phoneHint }}</view>
 				</view>
-				<view class="level-wrap">
-					<text class="level-tag">{{ levelLabel }}</text>
-					<text class="level-sub">{{ levelSub }}</text>
+				<view v-if="member.isMember" class="level-emblem" @click="goBenefits">
+					<view class="emblem-light"></view>
+					<uni-icons type="vip-filled" size="16" color="#f9e6b1" />
+					<text class="emblem-level">{{ memberLevel }}</text>
+					<text class="emblem-text">MEMBER</text>
+				</view>
+				<view v-else class="open-member" @click="goMembershipPurchase">
+					<text class="open-member__text">立即开通会员</text>
+					<uni-icons type="right" size="14" color="#fff3cf" />
 				</view>
 			</view>
 
@@ -68,26 +73,10 @@
 
 <script>
 const levelThemeMap = {
-	v1: {
-		label: 'V1 青铜会员',
-		sub: '基础权益已开启',
-		background: 'linear-gradient(135deg, #7b6a5f 0%, #9f8a7e 50%, #d0b8a0 100%)'
-	},
-	v2: {
-		label: 'V2 白银会员',
-		sub: '进阶权益已开启',
-		background: 'linear-gradient(135deg, #2e5e93 0%, #4f7db2 45%, #83a8d0 100%)'
-	},
-	v3: {
-		label: 'V3 黑金会员',
-		sub: '尊享权益已开启',
-		background: 'linear-gradient(135deg, #1e1f23 0%, #353741 45%, #6a5a3d 100%)'
-	},
-	none: {
-		label: '普通用户',
-		sub: '开通会员享专属权益',
-		background: 'linear-gradient(135deg, #5d6578 0%, #79829b 45%, #a7afc6 100%)'
-	}
+	v1: 'linear-gradient(135deg, #7b6a5f 0%, #9f8a7e 50%, #d0b8a0 100%)',
+	v2: 'linear-gradient(135deg, #2e5e93 0%, #4f7db2 45%, #83a8d0 100%)',
+	v3: 'linear-gradient(135deg, #1e1f23 0%, #353741 45%, #6a5a3d 100%)',
+	none: 'linear-gradient(135deg, #3f4453 0%, #5a647a 45%, #8691ad 100%)'
 }
 
 export default {
@@ -120,28 +109,17 @@ export default {
 		}
 	},
 	computed: {
-		currentTheme() {
-			if (!this.member.isMember) {
-				return levelThemeMap.none
-			}
-			return levelThemeMap[this.member.level] || levelThemeMap.v1
-		},
 		memberCardStyle() {
+			const key = this.member.isMember ? this.member.level : 'none'
 			return {
-				background: this.currentTheme.background
+				background: levelThemeMap[key] || levelThemeMap.v1
 			}
 		},
 		displayPhone() {
 			return this.member.phoneBound ? this.member.phone : '未绑定手机号'
 		},
-		phoneHint() {
-			return this.member.phoneBound ? '点击可进入个人信息管理' : '首次使用请先绑定手机号，保障账号安全'
-		},
-		levelLabel() {
-			return this.currentTheme.label
-		},
-		levelSub() {
-			return this.currentTheme.sub
+		memberLevel() {
+			return (this.member.level || 'v1').toUpperCase()
 		}
 	},
 	methods: {
@@ -151,11 +129,17 @@ export default {
 			})
 		},
 		bindPhone() {
-			uni.showToast({
-				title: '请前往个人信息页绑定手机号',
-				icon: 'none'
-			})
 			this.goProfile()
+		},
+		goBenefits() {
+			uni.navigateTo({
+				url: '/pages/benefits/index'
+			})
+		},
+		goMembershipPurchase() {
+			uni.navigateTo({
+				url: '/pages/membership-purchase/index'
+			})
 		},
 		handleMenuClick(item) {
 			if (item.url) {
@@ -238,29 +222,61 @@ export default {
 	border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
-.hint {
-	margin-top: 10rpx;
-	font-size: 22rpx;
-	opacity: 0.92;
-}
-
-.level-wrap {
+.level-emblem {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
-	gap: 8rpx;
+	align-items: center;
+	justify-content: center;
+	width: 128rpx;
+	height: 128rpx;
+	border-radius: 50%;
+	background: linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08));
+	border: 1px solid rgba(255, 234, 185, 0.6);
+	box-shadow: inset 0 2rpx 10rpx rgba(255, 245, 214, 0.4), 0 8rpx 24rpx rgba(9, 12, 28, 0.3);
+	overflow: hidden;
 }
 
-.level-tag {
-	font-size: 22rpx;
-	padding: 6rpx 14rpx;
+.emblem-light {
+	position: absolute;
+	top: -12rpx;
+	left: 18rpx;
+	width: 64rpx;
+	height: 20rpx;
 	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.22);
+	background: rgba(255, 255, 255, 0.48);
+	filter: blur(3rpx);
 }
 
-.level-sub {
-	font-size: 22rpx;
+.emblem-level {
+	margin-top: 4rpx;
+	font-size: 30rpx;
+	font-weight: 700;
+	letter-spacing: 1rpx;
+	color: #ffe7ab;
+	text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.24);
+}
+
+.emblem-text {
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
 	opacity: 0.95;
+}
+
+.open-member {
+	display: flex;
+	align-items: center;
+	gap: 8rpx;
+	padding: 12rpx 16rpx;
+	border-radius: 999rpx;
+	background: linear-gradient(135deg, rgba(255, 215, 126, 0.34), rgba(255, 234, 185, 0.18));
+	border: 1px solid rgba(255, 236, 195, 0.75);
+}
+
+.open-member__text {
+	font-size: 22rpx;
+	font-weight: 600;
+	color: #fff5dc;
 }
 
 .member-card__stats {
