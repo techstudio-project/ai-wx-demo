@@ -19,7 +19,7 @@
 		<view class="section card-block">
 			<view class="section-head">
 				<text class="section-title">名校专区</text>
-				<text class="section-sub">精选热门院校</text>
+				<text class="section-sub more-link" @click="goSchoolMore">更多</text>
 			</view>
 			<view class="school-grid">
 				<view class="school-item" v-for="school in schools" :key="school.id" @click="goSchoolDetail(school)">
@@ -44,12 +44,11 @@
 							<text class="status" :class="activity.status === '报名中' ? 'ongoing' : 'ended'">{{ activity.status }}</text>
 						</view>
 						<text v-if="activity.desc" class="activity-desc">{{ activity.desc }}</text>
-						<view class="activity-footer">
-							<text class="activity-price">¥{{ activity.price }}</text>
-							<text class="activity-cta">查看详情</text>
+							<view class="activity-footer">
+								<text class="activity-price">¥{{ activity.price }}</text>
+							</view>
 						</view>
 					</view>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -92,12 +91,15 @@ export default {
 		goNoticeDetail(notice) {
 			uni.navigateTo({ url: `/pages/notice-detail/index?id=${notice.id}&title=${encodeURIComponent(notice.title)}` })
 		},
-		goSchoolDetail(school) {
-			uni.navigateTo({ url: `/pages/school-detail/index?id=${school.id}&name=${encodeURIComponent(school.name)}` })
-		},
-		goActivityDetail(activity) {
-			uni.navigateTo({ url: `/pages/activity-detail/index?id=${activity.id}&name=${encodeURIComponent(activity.name)}` })
-		}
+			goSchoolDetail(school) {
+				uni.navigateTo({ url: `/pages/school-detail/index?id=${school.id}&name=${encodeURIComponent(school.name)}` })
+			},
+			goSchoolMore() {
+				uni.navigateTo({ url: '/pages/school-more/index' })
+			},
+			goActivityDetail(activity) {
+				uni.navigateTo({ url: `/pages/activity-detail/index?id=${activity.id}&name=${encodeURIComponent(activity.name)}` })
+			}
 	}
 }
 </script>
@@ -172,6 +174,10 @@ export default {
 .section-sub {
 	font-size: 22rpx;
 	color: #9aa2b8;
+}
+
+.section-sub.more-link {
+	color: #4d63f6;
 }
 
 .school-grid {
@@ -279,8 +285,4 @@ export default {
 	color: #ff5d3b;
 }
 
-.activity-cta {
-	font-size: 22rpx;
-	color: #4d63f6;
-}
 </style>
