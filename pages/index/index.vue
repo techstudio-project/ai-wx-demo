@@ -89,7 +89,7 @@ export default {
 				isMember: true
 			},
 			quickActions: [
-				{ title: '积分充值', icon: 'wallet', bg: 'linear-gradient(135deg, #fa8c16, #ffb347)' },
+				{ title: '积分充值', icon: 'wallet', bg: 'linear-gradient(135deg, #fa8c16, #ffb347)', url: '/pages/points-recharge/index' },
 				{ title: '学生管理', icon: 'person', bg: 'linear-gradient(135deg, #2f54eb, #5b8cff)' },
 				{ title: '我的订单', icon: 'cart', bg: 'linear-gradient(135deg, #13c2c2, #5cdbd3)' },
 				{ title: '会员权益', icon: 'vip', bg: 'linear-gradient(135deg, #7a4cff, #9d7bff)', url: '/pages/benefits/index' }
