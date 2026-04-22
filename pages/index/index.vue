@@ -3,19 +3,14 @@
 		<view class="member-card" :style="memberCardStyle">
 			<view class="member-card__top">
 				<image class="avatar" :src="member.avatar" mode="aspectFill" />
-				<view class="user-meta" @click="goProfile">
+				<view class="user-meta">
 					<view class="phone-row">
 						<text class="phone">{{ displayPhone }}</text>
-						<view v-if="!member.phoneBound" class="bind-phone" @click.stop="bindPhone">
-							绑定
-						</view>
 					</view>
+					<view v-if="!member.phoneBound" class="bind-phone" @click="bindPhone">立即绑定</view>
 				</view>
 				<view v-if="member.isMember" class="level-emblem" @click="goBenefits">
-					<view class="emblem-light"></view>
-					<uni-icons type="vip-filled" size="16" color="#f9e6b1" />
 					<text class="emblem-level">{{ memberLevel }}</text>
-					<text class="emblem-text">MEMBER</text>
 				</view>
 				<view v-else class="open-member" @click="goMembershipPurchase">
 					<text class="open-member__text">立即开通会员</text>
@@ -28,7 +23,6 @@
 					<text class="stat-label">当前积分</text>
 					<text class="stat-value">{{ member.points }}</text>
 				</view>
-				<view class="divider"></view>
 				<view class="stat-item">
 					<text class="stat-label">即将过期</text>
 					<text class="stat-value danger">{{ member.expiringPoints }}</text>
@@ -123,13 +117,10 @@ export default {
 		}
 	},
 	methods: {
-		goProfile() {
+		bindPhone() {
 			uni.navigateTo({
 				url: '/pages/profile/index'
 			})
-		},
-		bindPhone() {
-			this.goProfile()
 		},
 		goBenefits() {
 			uni.navigateTo({
@@ -215,52 +206,37 @@ export default {
 }
 
 .bind-phone {
-	padding: 6rpx 14rpx;
-	font-size: 20rpx;
+	margin-top: 12rpx;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8rpx 18rpx;
+	font-size: 22rpx;
 	border-radius: 999rpx;
 	background: rgba(255, 255, 255, 0.2);
-	border: 1px solid rgba(255, 255, 255, 0.45);
+	border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .level-emblem {
-	position: relative;
 	display: flex;
-	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 128rpx;
-	height: 128rpx;
-	border-radius: 50%;
-	background: linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08));
-	border: 1px solid rgba(255, 234, 185, 0.6);
-	box-shadow: inset 0 2rpx 10rpx rgba(255, 245, 214, 0.4), 0 8rpx 24rpx rgba(9, 12, 28, 0.3);
-	overflow: hidden;
-}
-
-.emblem-light {
-	position: absolute;
-	top: -12rpx;
-	left: 18rpx;
-	width: 64rpx;
-	height: 20rpx;
-	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.48);
-	filter: blur(3rpx);
+	min-width: 132rpx;
+	height: 86rpx;
+	padding: 0 20rpx;
+	border-radius: 22rpx;
+	background: linear-gradient(135deg, rgba(255, 244, 210, 0.3), rgba(255, 226, 160, 0.12));
+	border: 1px solid rgba(255, 236, 196, 0.62);
+	box-shadow: inset 0 1rpx 6rpx rgba(255, 248, 227, 0.38);
 }
 
 .emblem-level {
-	margin-top: 4rpx;
-	font-size: 30rpx;
+	font-size: 46rpx;
 	font-weight: 700;
+	line-height: 1;
 	letter-spacing: 1rpx;
-	color: #ffe7ab;
-	text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.24);
-}
-
-.emblem-text {
-	font-size: 16rpx;
-	letter-spacing: 2rpx;
-	opacity: 0.95;
+	color: #ffecbd;
+	text-shadow: 0 2rpx 8rpx rgba(17, 14, 6, 0.28);
 }
 
 .open-member {
@@ -283,12 +259,14 @@ export default {
 	margin-top: 34rpx;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	padding: 22rpx 20rpx;
 	border-radius: 20rpx;
 	background: rgba(8, 11, 23, 0.16);
 	backdrop-filter: blur(6rpx);
 	position: relative;
 	z-index: 2;
+	gap: 18rpx;
 }
 
 .stat-item {
@@ -310,12 +288,6 @@ export default {
 
 .stat-value.danger {
 	color: #ffd591;
-}
-
-.divider {
-	width: 1px;
-	height: 58rpx;
-	background: rgba(255, 255, 255, 0.32);
 }
 
 .card-block {
@@ -371,7 +343,7 @@ export default {
 .menu-row {
 	display: flex;
 	align-items: center;
-	padding: 8rpx 10rpx;
+	padding: 14rpx 12rpx;
 	border-bottom: 1px solid #f1f3f9;
 }
 
@@ -382,7 +354,7 @@ export default {
 .list-icon {
 	width: 56rpx;
 	height: 56rpx;
-	margin-right: 18rpx;
+	margin-right: 20rpx;
 	border-radius: 16rpx;
 	display: flex;
 	align-items: center;
@@ -395,12 +367,12 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding: 10rpx 0;
-	gap: 6rpx;
+	padding: 12rpx 0;
+	gap: 8rpx;
 }
 
 .menu-content.single-line {
-	min-height: 72rpx;
+	min-height: 76rpx;
 	justify-content: center;
 }
 
