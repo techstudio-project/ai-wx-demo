@@ -69,6 +69,8 @@
 				</view>
 			</view>
 		</view>
+
+		<view v-if="!filteredSchools.length" class="empty">未找到匹配学校，请更换筛选条件</view>
 	</view>
 </template>
 
