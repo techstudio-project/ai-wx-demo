@@ -29,6 +29,12 @@
 			"style": {
 				"navigationBarTitleText": "开通会员"
 			}
+		},
+		{
+			"path": "pages/membership-upgrade/index",
+			"style": {
+				"navigationBarTitleText": "会员升级"
+			}
 		}
 	],
 	"globalStyle": {

@@ -81,11 +81,11 @@ export default {
 		return {
 			member: {
 				avatar: 'https://picsum.photos/120/120',
-				phone: '138****8888',
-				phoneBound: true,
+				phone: '',
+				phoneBound: false,
 				points: 12860,
 				expiringPoints: 320,
-				level: 'v2',
+				level: 'v3',
 				isMember: true
 			},
 			quickActions: [
@@ -130,7 +130,7 @@ export default {
 		},
 		goMembershipPurchase() {
 			uni.navigateTo({
-				url: '/pages/membership-purchase/index'
+				url: '/pages/benefits/index'
 			})
 		},
 		handleMenuClick(item) {
