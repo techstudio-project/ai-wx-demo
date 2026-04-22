@@ -11,6 +11,18 @@
 			"style": {
 				"navigationBarTitleText": "会员权益"
 			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/points-record/index",
+			"style": {
+				"navigationBarTitleText": "积分记录"
+			}
 		}
 	],
 	"globalStyle": {

@@ -3,16 +3,18 @@
 		<view class="member-card" :style="memberCardStyle">
 			<view class="member-card__top">
 				<image class="avatar" :src="member.avatar" mode="aspectFill" />
-				<view class="user-meta">
-					<view class="phone">{{ member.phone }}</view>
-					<view class="level-row">
-						<text class="level-tag">{{ member.levelName }}</text>
-						<text class="level-sub">{{ member.levelDesc }}</text>
+				<view class="user-meta" @click="goProfile">
+					<view class="phone-row">
+						<text class="phone">{{ displayPhone }}</text>
+						<view v-if="!member.phoneBound" class="bind-phone" @click.stop="bindPhone">
+							去绑定
+						</view>
 					</view>
+					<view class="hint">{{ phoneHint }}</view>
 				</view>
-				<view class="benefits-entry" @click="goBenefits">
-					<text>会员权益</text>
-					<uni-icons type="right" size="14" color="rgba(255,255,255,0.9)" />
+				<view class="level-wrap">
+					<text class="level-tag">{{ levelLabel }}</text>
+					<text class="level-sub">{{ levelSub }}</text>
 				</view>
 			</view>
 
@@ -45,24 +47,21 @@
 
 		<view class="menu-section card-block">
 			<view class="section-title">常用服务</view>
-			<uni-list :border="false">
-				<uni-list-item
-					v-for="menu in serviceMenus"
-					:key="menu.title"
-					:title="menu.title"
-					:note="menu.note"
-					showArrow
-					clickable
-					:border="false"
-					@click="handleMenuClick(menu)"
-				>
-					<template #header>
-						<view class="list-icon" :style="{ background: menu.bg }">
-							<uni-icons :type="menu.icon" size="17" color="#fff" />
-						</view>
-					</template>
-				</uni-list-item>
-			</uni-list>
+			<view
+				v-for="menu in serviceMenus"
+				:key="menu.title"
+				class="menu-row"
+				@click="handleMenuClick(menu)"
+			>
+				<view class="list-icon" :style="{ background: menu.bg }">
+					<uni-icons :type="menu.icon" size="17" color="#fff" />
+				</view>
+				<view class="menu-content" :class="{ 'single-line': !menu.note }">
+					<text class="menu-title">{{ menu.title }}</text>
+					<text v-if="menu.note" class="menu-note">{{ menu.note }}</text>
+				</view>
+				<uni-icons type="right" size="16" color="#b9bfd0" />
+			</view>
 		</view>
 	</view>
 </template>
@@ -70,19 +69,24 @@
 <script>
 const levelThemeMap = {
 	v1: {
-		name: 'V1 青铜会员',
-		desc: '成长值 0 - 999',
+		label: 'V1 青铜会员',
+		sub: '基础权益已开启',
 		background: 'linear-gradient(135deg, #7b6a5f 0%, #9f8a7e 50%, #d0b8a0 100%)'
 	},
 	v2: {
-		name: 'V2 白银会员',
-		desc: '成长值 1000 - 2999',
+		label: 'V2 白银会员',
+		sub: '进阶权益已开启',
 		background: 'linear-gradient(135deg, #2e5e93 0%, #4f7db2 45%, #83a8d0 100%)'
 	},
 	v3: {
-		name: 'V3 黑金会员',
-		desc: '成长值 3000+',
+		label: 'V3 黑金会员',
+		sub: '尊享权益已开启',
 		background: 'linear-gradient(135deg, #1e1f23 0%, #353741 45%, #6a5a3d 100%)'
+	},
+	none: {
+		label: '普通用户',
+		sub: '开通会员享专属权益',
+		background: 'linear-gradient(135deg, #5d6578 0%, #79829b 45%, #a7afc6 100%)'
 	}
 }
 
@@ -91,19 +95,22 @@ export default {
 		return {
 			member: {
 				avatar: 'https://picsum.photos/120/120',
-				phone: '138****8888',
+				phone: '',
+				phoneBound: false,
 				points: 12860,
 				expiringPoints: 320,
-				level: 'v3'
+				level: 'v3',
+				isMember: true
 			},
 			quickActions: [
 				{ title: '积分充值', icon: 'wallet', bg: 'linear-gradient(135deg, #fa8c16, #ffb347)' },
 				{ title: '学生管理', icon: 'person', bg: 'linear-gradient(135deg, #2f54eb, #5b8cff)' },
 				{ title: '我的订单', icon: 'cart', bg: 'linear-gradient(135deg, #13c2c2, #5cdbd3)' },
-				{ title: '优惠券', icon: 'gift', bg: 'linear-gradient(135deg, #eb2f96, #ff85c0)' }
+				{ title: '会员权益', icon: 'vip', bg: 'linear-gradient(135deg, #7a4cff, #9d7bff)', url: '/pages/benefits/index' }
 			],
 			serviceMenus: [
-				{ title: '会员权益', note: '查看当前等级专属权益', icon: 'vip', bg: '#7857f5', url: '/pages/benefits/index' },
+				{ title: '个人信息', note: '头像 / 手机号 / 账号设置', icon: 'contact', bg: '#4f6cff', url: '/pages/profile/index' },
+				{ title: '积分使用记录', note: '', icon: 'bars', bg: '#3a86ff', url: '/pages/points-record/index' },
 				{ title: '我的学习档案', note: '学习时长 / 进度统计', icon: 'compose', bg: '#2b7dfa' },
 				{ title: '发票与合同', note: '订单开票与电子合同下载', icon: 'paperplane', bg: '#3cb371' },
 				{ title: '收货地址', note: '教材与礼品寄送地址管理', icon: 'location', bg: '#00b894' },
@@ -113,35 +120,42 @@ export default {
 		}
 	},
 	computed: {
-		memberTheme() {
+		currentTheme() {
+			if (!this.member.isMember) {
+				return levelThemeMap.none
+			}
 			return levelThemeMap[this.member.level] || levelThemeMap.v1
 		},
 		memberCardStyle() {
 			return {
-				background: this.memberTheme.background
+				background: this.currentTheme.background
 			}
 		},
-		memberLevelName() {
-			return this.memberTheme.name
+		displayPhone() {
+			return this.member.phoneBound ? this.member.phone : '未绑定手机号'
 		},
-		memberLevelDesc() {
-			return this.memberTheme.desc
-		}
-	},
-	watch: {
-		memberTheme: {
-			immediate: true,
-			handler(theme) {
-				this.member.levelName = theme.name
-				this.member.levelDesc = theme.desc
-			}
+		phoneHint() {
+			return this.member.phoneBound ? '点击可进入个人信息管理' : '首次使用请先绑定手机号，保障账号安全'
+		},
+		levelLabel() {
+			return this.currentTheme.label
+		},
+		levelSub() {
+			return this.currentTheme.sub
 		}
 	},
 	methods: {
-		goBenefits() {
+		goProfile() {
 			uni.navigateTo({
-				url: '/pages/benefits/index'
+				url: '/pages/profile/index'
 			})
+		},
+		bindPhone() {
+			uni.showToast({
+				title: '请前往个人信息页绑定手机号',
+				icon: 'none'
+			})
+			this.goProfile()
 		},
 		handleMenuClick(item) {
 			if (item.url) {
@@ -161,7 +175,7 @@ export default {
 .mine-page {
 	min-height: 100vh;
 	padding: 30rpx 24rpx;
-	background: linear-gradient(180deg, #f4f7ff 0%, #f7f8fa 40%, #f6f6f6 100%);
+	background: linear-gradient(180deg, #f3f6ff 0%, #f7f8fa 40%, #f6f6f6 100%);
 	box-sizing: border-box;
 }
 
@@ -204,39 +218,49 @@ export default {
 	flex: 1;
 }
 
+.phone-row {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+}
+
 .phone {
 	font-size: 34rpx;
 	font-weight: 600;
 	letter-spacing: 1rpx;
 }
 
-.level-row {
-	margin-top: 8rpx;
+.bind-phone {
+	padding: 6rpx 14rpx;
+	font-size: 20rpx;
+	border-radius: 999rpx;
+	background: rgba(255, 255, 255, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.hint {
+	margin-top: 10rpx;
+	font-size: 22rpx;
+	opacity: 0.92;
+}
+
+.level-wrap {
 	display: flex;
-	align-items: center;
-	gap: 12rpx;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 8rpx;
 }
 
 .level-tag {
 	font-size: 22rpx;
-	padding: 4rpx 12rpx;
+	padding: 6rpx 14rpx;
 	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.18);
+	background: rgba(255, 255, 255, 0.22);
 }
 
 .level-sub {
 	font-size: 22rpx;
 	opacity: 0.95;
-}
-
-.benefits-entry {
-	display: flex;
-	align-items: center;
-	font-size: 24rpx;
-	gap: 6rpx;
-	padding: 10rpx 14rpx;
-	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.16);
 }
 
 .member-card__stats {
@@ -328,13 +352,49 @@ export default {
 	color: #1f2333;
 }
 
+.menu-row {
+	display: flex;
+	align-items: center;
+	padding: 8rpx 10rpx;
+	border-bottom: 1px solid #f1f3f9;
+}
+
+.menu-row:last-child {
+	border-bottom: none;
+}
+
 .list-icon {
 	width: 56rpx;
 	height: 56rpx;
-	margin: 20rpx 20rpx 20rpx 8rpx;
+	margin-right: 18rpx;
 	border-radius: 16rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
+}
+
+.menu-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 10rpx 0;
+	gap: 6rpx;
+}
+
+.menu-content.single-line {
+	min-height: 72rpx;
+	justify-content: center;
+}
+
+.menu-title {
+	font-size: 28rpx;
+	color: #1f2333;
+}
+
+.menu-note {
+	font-size: 22rpx;
+	color: #949db3;
 }
 </style>
