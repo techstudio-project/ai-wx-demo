@@ -63,7 +63,6 @@
 <script>
 
 export default {
-	components: { BottomNav },
 	data() {
 		return {
 			currentNotice: 0,
@@ -118,7 +117,7 @@ export default {
 <style>
 .home-page {
 	min-height: 100vh;
-	padding: 24rpx 24rpx 120rpx;
+	padding: 24rpx;
 	background: linear-gradient(180deg, #f3f6ff 0%, #f8f9fc 45%, #ffffff 100%);
 	box-sizing: border-box;
 }

@@ -4,21 +4,25 @@
 			<view class="search-row">
 				<uni-icons type="search" size="18" color="#8b94aa" />
 				<input class="search-input" v-model="keyword" placeholder="搜索学校名称" placeholder-class="placeholder" />
-				<view class="filter-btn" @click="showFilter = true">
-					<uni-icons type="settings" size="15" color="#4a64ff" />
-					<text>筛选</text>
-				</view>
 			</view>
-			<view class="active-filters">
-				<text class="filter-pill">区域：{{ area }}</text>
-				<text class="filter-pill">学段：{{ type }}</text>
-				<text class="filter-pill">属性：{{ level }}</text>
+			<view class="filter-row">
+				<view class="filter-trigger" @click="openFilter('area')">
+					<text>区域：{{ area }}</text>
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
+				</view>
+				<view class="filter-trigger" @click="openFilter('type')">
+					<text>学校类型：{{ type }}</text>
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
+				</view>
+				<view class="filter-trigger" @click="openFilter('level')">
+					<text>学校属性：{{ level }}</text>
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
+				</view>
 			</view>
 		</view>
 
 		<view class="result-head">
 			<text>共 {{ filteredSchools.length }} 所学校</text>
-			<text class="result-sub">按热度排序</text>
 		</view>
 
 		<view class="school-list">
@@ -30,7 +34,10 @@
 						<view class="hotness"><uni-icons type="fire" size="14" color="#ff7a45" /> {{ school.hot }}</view>
 					</view>
 					<view class="tag-wrap">
-						<text class="tag tag-area"><uni-icons type="location" size="12" color="#2f78ff" /> {{ school.area }}</text>
+						<view class="tag tag-area">
+							<uni-icons type="location" size="12" color="#2f78ff" />
+							<text>{{ school.area }}</text>
+						</view>
 						<text class="tag" :class="`tag-${tag.type}`" v-for="tag in school.tags" :key="tag.text">{{ tag.text }}</text>
 					</view>
 					<text class="address">{{ school.address }}</text>
@@ -40,37 +47,22 @@
 
 		<view v-if="!filteredSchools.length" class="empty">未找到匹配学校，请更换筛选条件</view>
 
-		<view v-if="showFilter" class="filter-mask" @click="showFilter = false">
-			<view class="filter-panel" @click.stop>
-				<view class="panel-head">
-					<text class="panel-title">筛选学校</text>
-					<text class="reset" @click="resetFilter">重置</text>
-				</view>
-				<view class="panel-group">
-					<text class="panel-label">区域</text>
-					<view class="panel-options">
-						<text class="option" :class="{ active: area === item }" v-for="item in areaOptions" :key="item" @click="area = item">{{ item }}</text>
+		<view v-if="activeFilter" class="filter-mask" @click="closeFilter">
+			<view class="filter-popup" @click.stop>
+				<view class="popup-title">{{ currentFilterLabel }}</view>
+				<view class="popup-options">
+					<view
+						v-for="item in currentOptions"
+						:key="item"
+						class="popup-option"
+						:class="{ active: currentValue === item }"
+						@click="selectFilter(item)"
+					>
+						{{ item }}
 					</view>
-				</view>
-				<view class="panel-group">
-					<text class="panel-label">学段</text>
-					<view class="panel-options">
-						<text class="option" :class="{ active: type === item }" v-for="item in typeOptions" :key="item" @click="type = item">{{ item }}</text>
-					</view>
-				</view>
-				<view class="panel-group">
-					<text class="panel-label">属性</text>
-					<view class="panel-options">
-						<text class="option" :class="{ active: level === item }" v-for="item in levelOptions" :key="item" @click="level = item">{{ item }}</text>
-					</view>
-				</view>
-				<view class="panel-footer">
-					<view class="confirm" @click="showFilter = false">查看结果</view>
 				</view>
 			</view>
 		</view>
-
-		<view v-if="!filteredSchools.length" class="empty">未找到匹配学校，请更换筛选条件</view>
 	</view>
 </template>
 
@@ -89,7 +81,7 @@ const schools = [
 export default {
 	data() {
 		return {
-			showFilter: false,
+			activeFilter: '',
 			keyword: '',
 			area: '全部',
 			type: '全部',
@@ -101,6 +93,24 @@ export default {
 		}
 	},
 	computed: {
+		currentOptions() {
+			if (this.activeFilter === 'area') return this.areaOptions
+			if (this.activeFilter === 'type') return this.typeOptions
+			if (this.activeFilter === 'level') return this.levelOptions
+			return []
+		},
+		currentFilterLabel() {
+			if (this.activeFilter === 'area') return '选择区域'
+			if (this.activeFilter === 'type') return '选择学校类型'
+			if (this.activeFilter === 'level') return '选择学校属性'
+			return ''
+		},
+		currentValue() {
+			if (this.activeFilter === 'area') return this.area
+			if (this.activeFilter === 'type') return this.type
+			if (this.activeFilter === 'level') return this.level
+			return ''
+		},
 		filteredSchools() {
 			const kw = this.keyword.trim()
 			return this.schools.filter((school) => {
@@ -113,32 +123,37 @@ export default {
 		}
 	},
 	methods: {
+		openFilter(type) {
+			this.activeFilter = type
+		},
+		closeFilter() {
+			this.activeFilter = ''
+		},
+		selectFilter(item) {
+			if (this.activeFilter === 'area') this.area = item
+			if (this.activeFilter === 'type') this.type = item
+			if (this.activeFilter === 'level') this.level = item
+			this.closeFilter()
+		},
 		goSchoolDetail(school) {
 			uni.navigateTo({ url: `/pages/school-detail/index?id=${school.id}&name=${encodeURIComponent(school.name)}` })
-		},
-		resetFilter() {
-			this.area = '全部'
-			this.type = '全部'
-			this.level = '全部'
 		}
 	}
 }
 </script>
 
 <style>
-.school-more-page { min-height: 100vh; padding: 24rpx 24rpx 120rpx; background: #f3f6ff; box-sizing: border-box; }
+.school-more-page { min-height: 100vh; padding: 24rpx; background: #f3f6ff; box-sizing: border-box; }
 .toolbar-card { background: #fff; border-radius: 20rpx; padding: 20rpx; box-shadow: 0 8rpx 22rpx rgba(43, 66, 138, 0.08); }
 .search-row { display: flex; align-items: center; gap: 10rpx; height: 76rpx; background: #f5f7ff; border-radius: 14rpx; padding: 0 16rpx; }
 .search-input { flex: 1; font-size: 24rpx; color: #1f2333; }
 .placeholder { color: #9aa2b8; }
-.filter-btn { display: inline-flex; align-items: center; gap: 6rpx; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 22rpx; color: #4a64ff; background: #e9edff; }
-.active-filters { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 10rpx; }
-.filter-pill { font-size: 20rpx; color: #64708f; background: #f2f4fb; border-radius: 999rpx; padding: 5rpx 14rpx; }
-.result-head { display: flex; justify-content: space-between; font-size: 23rpx; color: #6f7892; margin: 20rpx 4rpx 14rpx; }
-.result-sub { color: #9aa2b8; }
+.filter-row { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 10rpx; }
+.filter-trigger { display: inline-flex; align-items: center; gap: 4rpx; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 22rpx; color: #4a64ff; background: #e9edff; }
+.result-head { font-size: 23rpx; color: #6f7892; margin: 20rpx 4rpx 14rpx; }
 .school-list { display: flex; flex-direction: column; gap: 16rpx; }
-.school-card { display: flex; gap: 18rpx; padding: 20rpx; border-radius: 20rpx; background: #fff; box-shadow: 0 8rpx 20rpx rgba(37, 56, 120, 0.07); }
-.school-logo { width: 92rpx; height: 92rpx; border-radius: 16rpx; background: #f4f7ff; flex-shrink: 0; }
+.school-card { display: flex; align-items: center; gap: 24rpx; padding: 26rpx; border-radius: 20rpx; background: #fff; box-shadow: 0 8rpx 20rpx rgba(37, 56, 120, 0.07); }
+.school-logo { width: 112rpx; height: 112rpx; border-radius: 18rpx; background: #f4f7ff; flex-shrink: 0; }
 .school-main { flex: 1; }
 .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
 .school-name { flex: 1; font-size: 28rpx; font-weight: 600; color: #1e2536; }
@@ -153,16 +168,10 @@ export default {
 .tag-purple { color: #7d57f8; background: #f1ecff; }
 .address { margin-top: 12rpx; font-size: 22rpx; color: #6f7892; line-height: 1.5; }
 .empty { margin-top: 100rpx; text-align: center; color: #97a0b8; font-size: 24rpx; }
-.filter-mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; background: rgba(19, 28, 56, 0.38); display: flex; justify-content: center; align-items: flex-end; z-index: 80; }
-.filter-panel { width: 100%; border-radius: 28rpx 28rpx 0 0; background: #fff; padding: 26rpx 24rpx 30rpx; box-sizing: border-box; }
-.panel-head { display: flex; align-items: center; justify-content: space-between; }
-.panel-title { font-size: 30rpx; color: #1f2333; font-weight: 600; }
-.reset { font-size: 23rpx; color: #7581a3; }
-.panel-group { margin-top: 20rpx; }
-.panel-label { font-size: 24rpx; color: #4f5974; }
-.panel-options { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 12rpx; }
-.option { font-size: 23rpx; color: #616a80; background: #f4f6fb; border-radius: 999rpx; padding: 8rpx 20rpx; }
-.option.active { color: #3154ff; background: #e8edff; font-weight: 600; }
-.panel-footer { margin-top: 24rpx; }
-.confirm { height: 82rpx; border-radius: 14rpx; background: linear-gradient(135deg, #4560f8, #5f7cff); color: #fff; font-size: 28rpx; display: flex; align-items: center; justify-content: center; }
+.filter-mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 90; background: rgba(20, 30, 58, 0.26); display: flex; align-items: flex-end; }
+.filter-popup { width: 100%; border-radius: 28rpx 28rpx 0 0; background: #fff; padding: 26rpx 24rpx 40rpx; box-sizing: border-box; max-height: 58vh; }
+.popup-title { font-size: 30rpx; font-weight: 600; color: #1f2333; }
+.popup-options { margin-top: 16rpx; display: flex; flex-wrap: wrap; gap: 12rpx; overflow-y: auto; }
+.popup-option { font-size: 23rpx; color: #616a80; background: #f4f6fb; border-radius: 999rpx; padding: 10rpx 22rpx; }
+.popup-option.active { color: #3154ff; background: #e8edff; font-weight: 600; }
 </style>
