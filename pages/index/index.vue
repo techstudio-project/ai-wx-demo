@@ -1,408 +1,286 @@
 <template>
-	<view class="mine-page">
-		<view class="member-card" :style="memberCardStyle">
-			<view class="member-card__top">
-				<image class="avatar" :src="member.avatar" mode="aspectFill" />
-				<view class="user-meta">
-					<view class="phone-row">
-						<text class="phone">{{ displayPhone }}</text>
-					</view>
-					<view v-if="!member.phoneBound" class="bind-phone" @click="bindPhone">立即绑定</view>
-				</view>
-					<view v-if="member.isMember" class="level-emblem" @click="goBenefits">
-						<view class="emblem-light"></view>
-						<uni-icons type="vip-filled" size="16" color="#f9e6b1" />
-						<text class="emblem-level">{{ memberLevel }}</text>
-						<text class="emblem-text">MEMBER</text>
-					</view>
-				<view v-else class="open-member" @click="goMembershipPurchase">
-					<text class="open-member__text">立即开通会员</text>
-					<uni-icons type="right" size="14" color="#fff3cf" />
-				</view>
-			</view>
+	<view class="home-page">
+		<swiper class="banner-swiper" autoplay circular indicator-dots indicator-color="rgba(255,255,255,0.45)" indicator-active-color="#fff">
+			<swiper-item v-for="item in banners" :key="item.id">
+				<image class="banner-image" :src="item.image" mode="aspectFill" />
+			</swiper-item>
+		</swiper>
 
-			<view class="member-card__stats">
-				<view class="stat-item">
-					<text class="stat-label">当前积分</text>
-					<text class="stat-value">{{ member.points }}</text>
-				</view>
-				<view class="stat-item">
-					<text class="stat-label">即将过期</text>
-					<text class="stat-value danger">{{ member.expiringPoints }}</text>
+		<view class="notice-bar card-block">
+			<uni-icons type="sound-filled" size="18" color="#4d63f6" />
+			<swiper class="notice-swiper" vertical autoplay circular interval="3000" duration="500" @change="onNoticeChange">
+				<swiper-item v-for="notice in notices" :key="notice.id">
+					<view class="notice-text" @click="goNoticeDetail(notice)">{{ notice.title }}</view>
+				</swiper-item>
+			</swiper>
+			<uni-icons type="right" size="16" color="#9ca4bb" />
+		</view>
+
+		<view class="section card-block">
+			<view class="section-head">
+				<text class="section-title">名校专区</text>
+				<text class="section-sub">精选热门院校</text>
+			</view>
+			<view class="school-grid">
+				<view class="school-item" v-for="school in schools" :key="school.id" @click="goSchoolDetail(school)">
+					<image class="school-logo" :src="school.logo" mode="aspectFit" />
+					<text class="school-name">{{ school.name }}</text>
 				</view>
 			</view>
 		</view>
 
-		<view class="quick-grid card-block">
-			<view
-				v-for="item in quickActions"
-				:key="item.title"
-				class="quick-item"
-				@click="handleMenuClick(item)"
-			>
-				<view class="quick-icon" :style="{ background: item.bg }">
-					<uni-icons :type="item.icon" size="20" color="#ffffff" />
-				</view>
-				<text class="quick-title">{{ item.title }}</text>
+		<view class="section card-block">
+			<view class="section-head">
+				<text class="section-title">活动报名</text>
+				<text class="section-sub">考试活动 / 训练营</text>
 			</view>
-		</view>
 
-		<view class="menu-section card-block">
-			<view class="section-title">常用服务</view>
-			<view
-				v-for="menu in serviceMenus"
-				:key="menu.title"
-				class="menu-row"
-				@click="handleMenuClick(menu)"
-			>
-				<view class="list-icon" :style="{ background: menu.bg }">
-					<uni-icons :type="menu.icon" size="17" color="#fff" />
+			<view class="activity-list">
+				<view class="activity-card" v-for="activity in activities" :key="activity.id" @click="goActivityDetail(activity)">
+					<image class="activity-image" :src="activity.image" mode="aspectFill" />
+					<view class="activity-content">
+						<view class="activity-top">
+							<text class="activity-name">{{ activity.name }}</text>
+							<text class="status" :class="activity.status === '报名中' ? 'ongoing' : 'ended'">{{ activity.status }}</text>
+						</view>
+						<text v-if="activity.desc" class="activity-desc">{{ activity.desc }}</text>
+						<view class="activity-footer">
+							<text class="activity-price">¥{{ activity.price }}</text>
+							<text class="activity-cta">查看详情</text>
+						</view>
+					</view>
 				</view>
-				<view class="menu-content" :class="{ 'single-line': !menu.note }">
-					<text class="menu-title">{{ menu.title }}</text>
-					<text v-if="menu.note" class="menu-note">{{ menu.note }}</text>
-				</view>
-				<uni-icons type="right" size="16" color="#b9bfd0" />
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-const levelThemeMap = {
-	v1: 'linear-gradient(135deg, #7b6a5f 0%, #9f8a7e 50%, #d0b8a0 100%)',
-	v2: 'linear-gradient(135deg, #2e5e93 0%, #4f7db2 45%, #83a8d0 100%)',
-	v3: 'linear-gradient(135deg, #1e1f23 0%, #353741 45%, #6a5a3d 100%)',
-	none: 'linear-gradient(135deg, #3f4453 0%, #5a647a 45%, #8691ad 100%)'
-}
-
 export default {
 	data() {
 		return {
-			member: {
-				avatar: 'https://picsum.photos/120/120',
-				phone: '',
-				phoneBound: false,
-				points: 12860,
-				expiringPoints: 320,
-				level: 'v3',
-				isMember: true
-			},
-			quickActions: [
-				{ title: '积分充值', icon: 'wallet', bg: 'linear-gradient(135deg, #fa8c16, #ffb347)', url: '/pages/points-recharge/index' },
-				{ title: '学生管理', icon: 'person', bg: 'linear-gradient(135deg, #2f54eb, #5b8cff)' },
-				{ title: '我的订单', icon: 'cart', bg: 'linear-gradient(135deg, #13c2c2, #5cdbd3)' },
-				{ title: '会员权益', icon: 'vip', bg: 'linear-gradient(135deg, #7a4cff, #9d7bff)', url: '/pages/benefits/index' }
+			currentNotice: 0,
+			banners: [
+				{ id: 1, image: '/static/c1.png' },
+				{ id: 2, image: '/static/c5.png' },
+				{ id: 3, image: '/static/c9.png' }
 			],
-			serviceMenus: [
-				{ title: '个人信息', note: '', icon: 'contact', bg: '#4f6cff', url: '/pages/profile/index' },
-				{ title: '积分明细', note: '', icon: 'bars', bg: '#3a86ff', url: '/pages/points-record/index' },
-				{ title: '会员升级', note: '', icon: 'paperplane', bg: '#2b7dfa' },
-				{ title: '意见反馈', note: '', icon: 'chatbubble', bg: '#fa541c' },
-				{ title: '设置', note: '', icon: 'gear', bg: '#8c8c8c' }
+			notices: [
+				{ id: 1, title: '2026 春季统考报名通道已开启，报名截止至 5 月 30 日' },
+				{ id: 2, title: '名校冲刺训练营新增 2 场公开课，限时免费预约' },
+				{ id: 3, title: '模拟考试系统升级完成，新增成绩趋势分析功能' }
+			],
+			schools: [
+				{ id: 1, name: '清华大学', logo: '/static/uni.png' },
+				{ id: 2, name: '北京大学', logo: '/static/c2.png' },
+				{ id: 3, name: '复旦大学', logo: '/static/c3.png' },
+				{ id: 4, name: '上海交大', logo: '/static/c4.png' },
+				{ id: 5, name: '浙江大学', logo: '/static/c6.png' },
+				{ id: 6, name: '中国人大', logo: '/static/c8.png' }
+			],
+			activities: [
+				{ id: 101, image: '/static/c7.png', name: '2026 全国联考模考赛', desc: '官方命题趋势模拟，实时排名与错题解析', price: 99, status: '报名中' },
+				{ id: 102, image: '/static/c5.png', name: '名校面试实战营', desc: '6 场直播 + 2 次一对一点评', price: 299, status: '报名中' },
+				{ id: 103, image: '/static/c1.png', name: '寒假冲刺集训班', desc: '已完结，支持回放学习', price: 199, status: '已结束' }
 			]
 		}
 	},
-	computed: {
-		memberCardStyle() {
-			const key = this.member.isMember ? this.member.level : 'none'
-			return {
-				background: levelThemeMap[key] || levelThemeMap.v1
-			}
-		},
-		displayPhone() {
-			return this.member.phoneBound ? this.member.phone : '未绑定手机号'
-		},
-		memberLevel() {
-			return (this.member.level || 'v1').toUpperCase()
-		}
-	},
 	methods: {
-		bindPhone() {
-			uni.navigateTo({
-				url: '/pages/profile/index'
-			})
+		onNoticeChange(e) {
+			this.currentNotice = e.detail.current
 		},
-		goBenefits() {
-			uni.navigateTo({
-				url: '/pages/benefits/index'
-			})
+		goNoticeDetail(notice) {
+			uni.navigateTo({ url: `/pages/notice-detail/index?id=${notice.id}&title=${encodeURIComponent(notice.title)}` })
 		},
-		goMembershipPurchase() {
-			uni.navigateTo({
-				url: '/pages/benefits/index'
-			})
+		goSchoolDetail(school) {
+			uni.navigateTo({ url: `/pages/school-detail/index?id=${school.id}&name=${encodeURIComponent(school.name)}` })
 		},
-		handleMenuClick(item) {
-			if (item.url) {
-				uni.navigateTo({ url: item.url })
-				return
-			}
-			uni.showToast({
-				title: `${item.title}功能开发中`,
-				icon: 'none'
-			})
+		goActivityDetail(activity) {
+			uni.navigateTo({ url: `/pages/activity-detail/index?id=${activity.id}&name=${encodeURIComponent(activity.name)}` })
 		}
 	}
 }
 </script>
 
 <style>
-.mine-page {
+.home-page {
 	min-height: 100vh;
-	padding: 30rpx 24rpx;
-	background: linear-gradient(180deg, #f3f6ff 0%, #f7f8fa 40%, #f6f6f6 100%);
+	padding: 24rpx;
+	background: linear-gradient(180deg, #f3f6ff 0%, #f8f9fc 45%, #ffffff 100%);
 	box-sizing: border-box;
 }
 
-.member-card {
-	position: relative;
-	padding: 32rpx 28rpx;
-	border-radius: 28rpx;
-	color: #ffffff;
-	box-shadow: 0 18rpx 40rpx rgba(27, 38, 87, 0.22);
+.banner-swiper {
+	height: 320rpx;
+	border-radius: 24rpx;
 	overflow: hidden;
+	box-shadow: 0 14rpx 34rpx rgba(24, 36, 87, 0.16);
 }
 
-.member-card::after {
-	content: '';
-	position: absolute;
-	width: 280rpx;
-	height: 280rpx;
-	right: -100rpx;
-	top: -120rpx;
-	background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 72%);
-}
-
-.member-card__top {
-	display: flex;
-	align-items: center;
-	position: relative;
-	z-index: 2;
-}
-
-.avatar {
-	width: 94rpx;
-	height: 94rpx;
-	border-radius: 50%;
-	border: 3rpx solid rgba(255, 255, 255, 0.5);
-	flex-shrink: 0;
-}
-
-.user-meta {
-	margin-left: 20rpx;
-	flex: 1;
-}
-
-.phone-row {
-	display: flex;
-	align-items: center;
-	gap: 12rpx;
-}
-
-.phone {
-	font-size: 34rpx;
-	font-weight: 600;
-	letter-spacing: 1rpx;
-}
-
-.bind-phone {
-	margin-top: 12rpx;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: 8rpx 18rpx;
-	font-size: 22rpx;
-	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.2);
-	border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.level-emblem {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 128rpx;
-	height: 128rpx;
-	border-radius: 50%;
-	background: linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08));
-	border: 1px solid rgba(255, 236, 196, 0.62);
-	box-shadow: inset 0 2rpx 10rpx rgba(255, 245, 214, 0.4), 0 8rpx 24rpx rgba(9, 12, 28, 0.3);
-	overflow: hidden;
-}
-
-.emblem-light {
-	position: absolute;
-	top: -12rpx;
-	left: 18rpx;
-	width: 64rpx;
-	height: 20rpx;
-	border-radius: 999rpx;
-	background: rgba(255, 255, 255, 0.48);
-	filter: blur(3rpx);
-}
-
-.emblem-level {
-	margin-top: 4rpx;
-	font-size: 30rpx;
-	font-weight: 700;
-	letter-spacing: 1rpx;
-	color: #ffe7ab;
-	text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.24);
-}
-
-.emblem-text {
-	font-size: 16rpx;
-	letter-spacing: 2rpx;
-	opacity: 0.95;
-}
-
-.open-member {
-	display: flex;
-	align-items: center;
-	gap: 8rpx;
-	padding: 12rpx 16rpx;
-	border-radius: 999rpx;
-	background: linear-gradient(135deg, rgba(255, 215, 126, 0.34), rgba(255, 234, 185, 0.18));
-	border: 1px solid rgba(255, 236, 195, 0.75);
-}
-
-.open-member__text {
-	font-size: 22rpx;
-	font-weight: 600;
-	color: #fff5dc;
-}
-
-.member-card__stats {
-	margin-top: 34rpx;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 22rpx 20rpx;
-	border-radius: 20rpx;
-	background: rgba(8, 11, 23, 0.16);
-	backdrop-filter: blur(6rpx);
-	position: relative;
-	z-index: 2;
-	gap: 18rpx;
-}
-
-.stat-item {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 8rpx;
-}
-
-.stat-label {
-	font-size: 22rpx;
-	opacity: 0.85;
-}
-
-.stat-value {
-	font-size: 36rpx;
-	font-weight: 700;
-}
-
-.stat-value.danger {
-	color: #ffd591;
+.banner-image {
+	width: 100%;
+	height: 100%;
 }
 
 .card-block {
-	margin-top: 24rpx;
-	background: #ffffff;
+	margin-top: 22rpx;
+	background: #fff;
 	border-radius: 24rpx;
-	padding: 12rpx;
-	box-shadow: 0 10rpx 30rpx rgba(15, 28, 63, 0.05);
+	box-shadow: 0 10rpx 28rpx rgba(22, 33, 74, 0.07);
 }
 
-.quick-grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 12rpx;
-	padding: 20rpx 12rpx;
-}
-
-.quick-item {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 12rpx;
-	padding: 12rpx 0;
-}
-
-.quick-icon {
-	width: 72rpx;
-	height: 72rpx;
-	border-radius: 20rpx;
+.notice-bar {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	box-shadow: 0 8rpx 20rpx rgba(45, 61, 122, 0.22);
+	padding: 0 20rpx;
+	height: 88rpx;
+	gap: 12rpx;
 }
 
-.quick-title {
+.notice-swiper {
+	flex: 1;
+	height: 88rpx;
+}
+
+.notice-text {
+	height: 88rpx;
+	line-height: 88rpx;
 	font-size: 24rpx;
-	color: #2f3447;
+	color: #2a3040;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-.menu-section {
-	padding-top: 8rpx;
+.section {
+	padding: 20rpx;
+}
+
+.section-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-bottom: 16rpx;
 }
 
 .section-title {
-	padding: 16rpx 18rpx;
-	font-size: 30rpx;
+	font-size: 32rpx;
 	font-weight: 600;
 	color: #1f2333;
 }
 
-.menu-row {
+.section-sub {
+	font-size: 22rpx;
+	color: #9aa2b8;
+}
+
+.school-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18rpx 12rpx;
+}
+
+.school-item {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	padding: 14rpx 12rpx;
-	border-bottom: 1px solid #f1f3f9;
-}
-
-.menu-row:last-child {
-	border-bottom: none;
-}
-
-.list-icon {
-	width: 56rpx;
-	height: 56rpx;
-	margin-right: 20rpx;
+	gap: 10rpx;
+	padding: 14rpx 10rpx;
 	border-radius: 16rpx;
+	background: linear-gradient(135deg, #f8f9ff 0%, #f1f4ff 100%);
+}
+
+.school-logo {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: 50%;
+}
+
+.school-name {
+	font-size: 22rpx;
+	color: #2d3448;
+}
+
+.activity-list {
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
+	gap: 18rpx;
+}
+
+.activity-card {
+	display: flex;
+	border-radius: 18rpx;
+	overflow: hidden;
+	background: #f9faff;
+}
+
+.activity-image {
+	width: 210rpx;
+	height: 170rpx;
 	flex-shrink: 0;
 }
 
-.menu-content {
+.activity-content {
 	flex: 1;
+	padding: 14rpx 16rpx;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	padding: 12rpx 0;
-	gap: 8rpx;
+	justify-content: space-between;
 }
 
-.menu-content.single-line {
-	min-height: 76rpx;
-	justify-content: center;
+.activity-top {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10rpx;
 }
 
-.menu-title {
-	font-size: 28rpx;
+.activity-name {
+	font-size: 27rpx;
+	font-weight: 600;
 	color: #1f2333;
+	line-height: 1.35;
 }
 
-.menu-note {
+.status {
+	font-size: 20rpx;
+	padding: 4rpx 10rpx;
+	border-radius: 999rpx;
+	white-space: nowrap;
+}
+
+.status.ongoing {
+	color: #1e8f4e;
+	background: #e9f9ee;
+}
+
+.status.ended {
+	color: #8d95ab;
+	background: #eef1f8;
+}
+
+.activity-desc {
+	margin-top: 8rpx;
 	font-size: 22rpx;
-	color: #949db3;
+	color: #7a8298;
+	line-height: 1.4;
+}
+
+.activity-footer {
+	margin-top: 10rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.activity-price {
+	font-size: 30rpx;
+	font-weight: 700;
+	color: #ff5d3b;
+}
+
+.activity-cta {
+	font-size: 22rpx;
+	color: #4d63f6;
 }
 </style>
