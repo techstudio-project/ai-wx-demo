@@ -84,11 +84,7 @@ export default {
 			activeFilter: '',
 			keyword: '',
 			area: '全部',
-			type: '全部',
-			level: '全部',
 			areaOptions: ['全部', '北京', '上海', '华东', '华中', '华南'],
-			typeOptions: ['全部', '小学', '初中', '高中'],
-			levelOptions: ['全部', '区重点', '市重点', '省重点'],
 			schools
 		}
 	},
@@ -112,13 +108,11 @@ export default {
 			return ''
 		},
 		filteredSchools() {
-			const kw = this.keyword.trim()
+				const kw = this.keyword.trim()
 			return this.schools.filter((school) => {
 				const matchName = !kw || school.name.includes(kw)
 				const matchArea = this.area === '全部' || school.area === this.area
-				const matchType = this.type === '全部' || school.type === this.type
-				const matchLevel = this.level === '全部' || school.level === this.level
-				return matchName && matchArea && matchType && matchLevel
+				return matchName && matchArea
 			}).sort((a, b) => b.hot - a.hot)
 		}
 	},
