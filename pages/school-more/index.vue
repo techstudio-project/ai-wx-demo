@@ -4,24 +4,25 @@
 			<view class="search-row">
 				<uni-icons type="search" size="18" color="#8b94aa" />
 				<input class="search-input" v-model="keyword" placeholder="搜索学校名称" placeholder-class="placeholder" />
-				<view class="area-select-trigger" @click="toggleAreaDropdown">
+			</view>
+			<view class="filter-row">
+				<view class="filter-trigger" @click="openFilter('area')">
 					<text>区域：{{ area }}</text>
-					<uni-icons :type="showAreaDropdown ? 'top' : 'bottom'" size="14" color="#4a64ff" />
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
 				</view>
-			</view>
-			<view v-if="showAreaDropdown" class="area-dropdown">
-				<view class="area-option" :class="{ active: area === item }" v-for="item in areaOptions" :key="item" @click="selectArea(item)">
-					{{ item }}
+				<view class="filter-trigger" @click="openFilter('type')">
+					<text>学校类型：{{ type }}</text>
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
 				</view>
-			</view>
-			<view class="active-filters">
-				<text class="filter-pill">当前区域：{{ area }}</text>
+				<view class="filter-trigger" @click="openFilter('level')">
+					<text>学校属性：{{ level }}</text>
+					<uni-icons type="bottom" size="13" color="#4a64ff" />
+				</view>
 			</view>
 		</view>
 
 		<view class="result-head">
 			<text>共 {{ filteredSchools.length }} 所学校</text>
-			<text class="result-sub">按热度排序</text>
 		</view>
 
 		<view class="school-list">
@@ -45,6 +46,23 @@
 		</view>
 
 		<view v-if="!filteredSchools.length" class="empty">未找到匹配学校，请更换筛选条件</view>
+
+		<view v-if="activeFilter" class="filter-mask" @click="closeFilter">
+			<view class="filter-popup" @click.stop>
+				<view class="popup-title">{{ currentFilterLabel }}</view>
+				<view class="popup-options">
+					<view
+						v-for="item in currentOptions"
+						:key="item"
+						class="popup-option"
+						:class="{ active: currentValue === item }"
+						@click="selectFilter(item)"
+					>
+						{{ item }}
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -63,7 +81,7 @@ const schools = [
 export default {
 	data() {
 		return {
-			showAreaDropdown: false,
+			activeFilter: '',
 			keyword: '',
 			area: '全部',
 			areaOptions: ['全部', '北京', '上海', '华东', '华中', '华南'],
@@ -71,6 +89,24 @@ export default {
 		}
 	},
 	computed: {
+		currentOptions() {
+			if (this.activeFilter === 'area') return this.areaOptions
+			if (this.activeFilter === 'type') return this.typeOptions
+			if (this.activeFilter === 'level') return this.levelOptions
+			return []
+		},
+		currentFilterLabel() {
+			if (this.activeFilter === 'area') return '选择区域'
+			if (this.activeFilter === 'type') return '选择学校类型'
+			if (this.activeFilter === 'level') return '选择学校属性'
+			return ''
+		},
+		currentValue() {
+			if (this.activeFilter === 'area') return this.area
+			if (this.activeFilter === 'type') return this.type
+			if (this.activeFilter === 'level') return this.level
+			return ''
+		},
 		filteredSchools() {
 				const kw = this.keyword.trim()
 			return this.schools.filter((school) => {
@@ -81,12 +117,17 @@ export default {
 		}
 	},
 	methods: {
-		toggleAreaDropdown() {
-			this.showAreaDropdown = !this.showAreaDropdown
+		openFilter(type) {
+			this.activeFilter = type
 		},
-		selectArea(item) {
-			this.area = item
-			this.showAreaDropdown = false
+		closeFilter() {
+			this.activeFilter = ''
+		},
+		selectFilter(item) {
+			if (this.activeFilter === 'area') this.area = item
+			if (this.activeFilter === 'type') this.type = item
+			if (this.activeFilter === 'level') this.level = item
+			this.closeFilter()
 		},
 		goSchoolDetail(school) {
 			uni.navigateTo({ url: `/pages/school-detail/index?id=${school.id}&name=${encodeURIComponent(school.name)}` })
@@ -101,18 +142,12 @@ export default {
 .search-row { display: flex; align-items: center; gap: 10rpx; height: 76rpx; background: #f5f7ff; border-radius: 14rpx; padding: 0 16rpx; }
 .search-input { flex: 1; font-size: 24rpx; color: #1f2333; }
 .placeholder { color: #9aa2b8; }
-.area-select-trigger { display: inline-flex; align-items: center; gap: 6rpx; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 22rpx; color: #4a64ff; background: #e9edff; }
-.area-dropdown { margin-top: 12rpx; border: 1rpx solid #e7ebf8; border-radius: 14rpx; background: #ffffff; max-height: 280rpx; overflow-y: auto; }
-.area-option { padding: 16rpx 18rpx; font-size: 23rpx; color: #58617b; border-bottom: 1rpx solid #f1f3fa; }
-.area-option:last-child { border-bottom: none; }
-.area-option.active { color: #3154ff; background: #eff3ff; font-weight: 600; }
-.active-filters { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 10rpx; }
-.filter-pill { font-size: 20rpx; color: #64708f; background: #f2f4fb; border-radius: 999rpx; padding: 5rpx 14rpx; }
-.result-head { display: flex; justify-content: space-between; font-size: 23rpx; color: #6f7892; margin: 20rpx 4rpx 14rpx; }
-.result-sub { color: #9aa2b8; }
+.filter-row { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 10rpx; }
+.filter-trigger { display: inline-flex; align-items: center; gap: 4rpx; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 22rpx; color: #4a64ff; background: #e9edff; }
+.result-head { font-size: 23rpx; color: #6f7892; margin: 20rpx 4rpx 14rpx; }
 .school-list { display: flex; flex-direction: column; gap: 16rpx; }
-.school-card { display: flex; align-items: center; gap: 18rpx; padding: 20rpx; border-radius: 20rpx; background: #fff; box-shadow: 0 8rpx 20rpx rgba(37, 56, 120, 0.07); }
-.school-logo { width: 92rpx; height: 92rpx; border-radius: 16rpx; background: #f4f7ff; flex-shrink: 0; }
+.school-card { display: flex; align-items: center; gap: 24rpx; padding: 26rpx; border-radius: 20rpx; background: #fff; box-shadow: 0 8rpx 20rpx rgba(37, 56, 120, 0.07); }
+.school-logo { width: 112rpx; height: 112rpx; border-radius: 18rpx; background: #f4f7ff; flex-shrink: 0; }
 .school-main { flex: 1; }
 .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
 .school-name { flex: 1; font-size: 28rpx; font-weight: 600; color: #1e2536; }
@@ -127,4 +162,10 @@ export default {
 .tag-purple { color: #7d57f8; background: #f1ecff; }
 .address { margin-top: 12rpx; font-size: 22rpx; color: #6f7892; line-height: 1.5; }
 .empty { margin-top: 100rpx; text-align: center; color: #97a0b8; font-size: 24rpx; }
+.filter-mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 90; background: rgba(20, 30, 58, 0.26); display: flex; align-items: flex-end; }
+.filter-popup { width: 100%; border-radius: 28rpx 28rpx 0 0; background: #fff; padding: 26rpx 24rpx 40rpx; box-sizing: border-box; max-height: 58vh; }
+.popup-title { font-size: 30rpx; font-weight: 600; color: #1f2333; }
+.popup-options { margin-top: 16rpx; display: flex; flex-wrap: wrap; gap: 12rpx; overflow-y: auto; }
+.popup-option { font-size: 23rpx; color: #616a80; background: #f4f6fb; border-radius: 999rpx; padding: 10rpx 22rpx; }
+.popup-option.active { color: #3154ff; background: #e8edff; font-weight: 600; }
 </style>
