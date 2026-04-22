@@ -63,6 +63,7 @@
 <script>
 
 export default {
+	components: { BottomNav },
 	data() {
 		return {
 			currentNotice: 0,

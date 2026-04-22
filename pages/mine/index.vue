@@ -65,10 +65,14 @@
 				<uni-icons type="right" size="16" color="#b9bfd0" />
 			</view>
 		</view>
+
+		<bottom-nav active="member" />
 	</view>
 </template>
 
 <script>
+import BottomNav from '@/components/bottom-nav.vue'
+
 const levelThemeMap = {
 	v1: 'linear-gradient(135deg, #7b6a5f 0%, #9f8a7e 50%, #d0b8a0 100%)',
 	v2: 'linear-gradient(135deg, #2e5e93 0%, #4f7db2 45%, #83a8d0 100%)',
@@ -77,6 +81,7 @@ const levelThemeMap = {
 }
 
 export default {
+	components: { BottomNav },
 	data() {
 		return {
 			member: {
