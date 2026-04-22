@@ -81,11 +81,11 @@ export default {
 		return {
 			member: {
 				avatar: 'https://picsum.photos/120/120',
-				phone: '',
-				phoneBound: false,
+				phone: '138****8888',
+				phoneBound: true,
 				points: 12860,
 				expiringPoints: 320,
-				level: 'v3',
+				level: 'v2',
 				isMember: true
 			},
 			quickActions: [
@@ -95,13 +95,11 @@ export default {
 				{ title: '会员权益', icon: 'vip', bg: 'linear-gradient(135deg, #7a4cff, #9d7bff)', url: '/pages/benefits/index' }
 			],
 			serviceMenus: [
-				{ title: '个人信息', note: '头像 / 手机号 / 账号设置', icon: 'contact', bg: '#4f6cff', url: '/pages/profile/index' },
-				{ title: '积分使用记录', note: '', icon: 'bars', bg: '#3a86ff', url: '/pages/points-record/index' },
-				{ title: '我的学习档案', note: '学习时长 / 进度统计', icon: 'compose', bg: '#2b7dfa' },
-				{ title: '发票与合同', note: '订单开票与电子合同下载', icon: 'paperplane', bg: '#3cb371' },
-				{ title: '收货地址', note: '教材与礼品寄送地址管理', icon: 'location', bg: '#00b894' },
-				{ title: '意见反馈', note: '问题建议与客服支持', icon: 'chatbubble', bg: '#fa541c' },
-				{ title: '设置', note: '账号安全 / 通知 / 隐私管理', icon: 'gear', bg: '#8c8c8c' }
+				{ title: '个人信息', note: '', icon: 'contact', bg: '#4f6cff', url: '/pages/profile/index' },
+				{ title: '积分明细', note: '', icon: 'bars', bg: '#3a86ff', url: '/pages/points-record/index' },
+				{ title: '会员升级', note: '', icon: 'paperplane', bg: '#2b7dfa' },
+				{ title: '意见反馈', note: '', icon: 'chatbubble', bg: '#fa541c' },
+				{ title: '设置', note: '', icon: 'gear', bg: '#8c8c8c' }
 			]
 		}
 	},
