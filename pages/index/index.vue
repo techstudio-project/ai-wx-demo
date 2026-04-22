@@ -23,7 +23,7 @@
 				</view>
 				<view class="more-chip" @click="goSchoolMore">
 					<text>查看全部</text>
-					<uni-icons type="arrow-right" size="13" color="#4d63f6" />
+					<uni-icons type="right" size="13" color="#4d63f6" />
 				</view>
 			</view>
 			<view class="school-grid">
