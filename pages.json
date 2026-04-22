@@ -7,6 +7,12 @@
 			}
 		},
 		{
+			"path": "pages/question-bank/index",
+			"style": {
+				"navigationBarTitleText": "试题库"
+			}
+		},
+		{
 			"path": "pages/benefits/index",
 			"style": {
 				"navigationBarTitleText": "会员权益"
@@ -45,7 +51,7 @@
 		{
 			"path": "pages/mine/index",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "会员"
 			}
 		},
 		{
@@ -81,5 +87,32 @@
 		"app-plus": {
 			"background": "#efeff4"
 		}
+	},
+	"tabBar": {
+		"color": "#8F97AB",
+		"selectedColor": "#3F5AF2",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"height": "58px",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/c2.png",
+				"selectedIconPath": "static/c1.png"
+			},
+			{
+				"pagePath": "pages/question-bank/index",
+				"text": "试题库",
+				"iconPath": "static/logo.png",
+				"selectedIconPath": "static/logo.png"
+			},
+			{
+				"pagePath": "pages/mine/index",
+				"text": "会员",
+				"iconPath": "static/c4.png",
+				"selectedIconPath": "static/c3.png"
+			}
+		]
 	}
 }
