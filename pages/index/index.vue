@@ -9,9 +9,12 @@
 					</view>
 					<view v-if="!member.phoneBound" class="bind-phone" @click="bindPhone">立即绑定</view>
 				</view>
-				<view v-if="member.isMember" class="level-emblem" @click="goBenefits">
-					<text class="emblem-level">{{ memberLevel }}</text>
-				</view>
+					<view v-if="member.isMember" class="level-emblem" @click="goBenefits">
+						<view class="emblem-light"></view>
+						<uni-icons type="vip-filled" size="16" color="#f9e6b1" />
+						<text class="emblem-level">{{ memberLevel }}</text>
+						<text class="emblem-text">MEMBER</text>
+					</view>
 				<view v-else class="open-member" @click="goMembershipPurchase">
 					<text class="open-member__text">立即开通会员</text>
 					<uni-icons type="right" size="14" color="#fff3cf" />
@@ -218,25 +221,44 @@ export default {
 }
 
 .level-emblem {
+	position: relative;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	min-width: 132rpx;
-	height: 86rpx;
-	padding: 0 20rpx;
-	border-radius: 22rpx;
-	background: linear-gradient(135deg, rgba(255, 244, 210, 0.3), rgba(255, 226, 160, 0.12));
+	width: 128rpx;
+	height: 128rpx;
+	border-radius: 50%;
+	background: linear-gradient(145deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08));
 	border: 1px solid rgba(255, 236, 196, 0.62);
-	box-shadow: inset 0 1rpx 6rpx rgba(255, 248, 227, 0.38);
+	box-shadow: inset 0 2rpx 10rpx rgba(255, 245, 214, 0.4), 0 8rpx 24rpx rgba(9, 12, 28, 0.3);
+	overflow: hidden;
+}
+
+.emblem-light {
+	position: absolute;
+	top: -12rpx;
+	left: 18rpx;
+	width: 64rpx;
+	height: 20rpx;
+	border-radius: 999rpx;
+	background: rgba(255, 255, 255, 0.48);
+	filter: blur(3rpx);
 }
 
 .emblem-level {
-	font-size: 46rpx;
+	margin-top: 4rpx;
+	font-size: 30rpx;
 	font-weight: 700;
-	line-height: 1;
 	letter-spacing: 1rpx;
-	color: #ffecbd;
-	text-shadow: 0 2rpx 8rpx rgba(17, 14, 6, 0.28);
+	color: #ffe7ab;
+	text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.24);
+}
+
+.emblem-text {
+	font-size: 16rpx;
+	letter-spacing: 2rpx;
+	opacity: 0.95;
 }
 
 .open-member {
