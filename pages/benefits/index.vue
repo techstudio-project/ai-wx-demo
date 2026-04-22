@@ -17,20 +17,23 @@
 			@change="onPlanChange"
 		>
 			<swiper-item v-for="(plan, index) in plans" :key="plan.level">
-				<view class="plan-card" :style="{ background: plan.background }">
-					<view class="plan-header">
-						<view class="plan-level">{{ plan.level }}</view>
-						<view class="plan-name">{{ plan.name }}</view>
+					<view class="plan-card" :style="{ background: plan.background }">
+						<view v-if="isCurrentPlan(plan)" class="current-tag">当前等级</view>
+						<view class="plan-header">
+							<view class="plan-name-wrap">
+								<view class="plan-name">{{ plan.name }}</view>
+								<view class="plan-sub">尊享会员权益</view>
+							</view>
+							<view class="plan-level">{{ plan.level }}</view>
+						</view>
+						<view class="plan-price-wrap">
+							<text class="price-sign">¥</text>
+							<text class="plan-price">{{ plan.price }}</text>
+							<text class="price-unit">/{{ plan.period }}</text>
+						</view>
 					</view>
-					<view class="plan-price-wrap">
-						<text class="price-sign">¥</text>
-						<text class="plan-price">{{ plan.price }}</text>
-						<text class="price-unit">/{{ plan.period }}</text>
-					</view>
-					<view v-if="isCurrentPlan(plan)" class="current-tag">当前等级</view>
-				</view>
-			</swiper-item>
-		</swiper>
+				</swiper-item>
+			</swiper>
 
 		<view class="dots">
 			<view
@@ -51,7 +54,9 @@
 
 		<view class="buy-bar">
 			<view class="buy-price">¥{{ activePlan.price }} / {{ activePlan.period }}</view>
-			<button class="buy-btn" @click="buyMembership">立即购买</button>
+			<button class="buy-btn" :class="{ disabled: !canPurchaseActivePlan }" @click="buyMembership">
+				{{ buyButtonText }}
+			</button>
 		</view>
 	</view>
 </template>
@@ -64,27 +69,30 @@ export default {
 			currentIndex: 0,
 			swiperMargin: '28rpx',
 			plans: [
-				{
-					level: 'V1',
-					levelKey: 'v1',
-					name: '青铜会员',
+					{
+						level: 'V1',
+						levelKey: 'v1',
+						rank: 1,
+						name: '青铜会员',
 					price: 39,
 					period: '月',
 					background: 'linear-gradient(135deg, #9c7b63 0%, #c09f86 100%)',
 					benefits: ['积分获取 1.2 倍', '课程预约优先提醒', '每月 1 张专属优惠券']
 				},
-				{
-					level: 'V2',
-					levelKey: 'v2',
+					{
+						level: 'V2',
+						levelKey: 'v2',
+						rank: 2,
 					name: '白银会员',
 					price: 99,
 					period: '季',
 					background: 'linear-gradient(135deg, #2f5f93 0%, #5a8fc6 100%)',
 					benefits: ['积分获取 1.6 倍', '热门课程优先预约', '专属学习顾问 1v1 答疑']
 				},
-				{
-					level: 'V3',
-					levelKey: 'v3',
+					{
+						level: 'V3',
+						levelKey: 'v3',
+						rank: 3,
 					name: '黑金会员',
 					price: 299,
 					period: '年',
@@ -97,6 +105,22 @@ export default {
 	computed: {
 		activePlan() {
 			return this.plans[this.currentIndex] || this.plans[0]
+		},
+		currentUserRank() {
+			const plan = this.plans.find((item) => item.levelKey === this.currentUserLevel)
+			return plan ? plan.rank : 0
+		},
+		canPurchaseActivePlan() {
+			return this.activePlan.rank >= this.currentUserRank
+		},
+		buyButtonText() {
+			if (this.isCurrentPlan(this.activePlan)) {
+				return '立即续费'
+			}
+			if (!this.canPurchaseActivePlan) {
+				return '当前等级不可降级购买'
+			}
+			return '立即购买'
 		},
 		currentLevelName() {
 			const plan = this.plans.find((item) => item.levelKey === this.currentUserLevel)
@@ -115,6 +139,13 @@ export default {
 			return plan.levelKey === this.currentUserLevel
 		},
 		buyMembership() {
+			if (!this.canPurchaseActivePlan) {
+				uni.showToast({
+					title: '当前已是更高等级会员',
+					icon: 'none'
+				})
+				return
+			}
 			uni.showToast({
 				title: `已选择${this.activePlan.level}${this.activePlan.name}`,
 				icon: 'none'
@@ -128,7 +159,7 @@ export default {
 .benefits-page {
 	min-height: 100vh;
 	padding: 28rpx 24rpx 190rpx;
-	background: linear-gradient(180deg, #f3f6ff 0%, #f8f9fd 42%, #f5f6fa 100%);
+	background: linear-gradient(180deg, #f5f8ff 0%, #fbfcff 42%, #ffffff 100%);
 	box-sizing: border-box;
 }
 
@@ -176,7 +207,7 @@ export default {
 	padding: 28rpx;
 	border-radius: 26rpx;
 	color: #fff;
-	box-shadow: 0 14rpx 32rpx rgba(21, 31, 70, 0.22);
+	box-shadow: 0 10rpx 22rpx rgba(21, 31, 70, 0.14);
 	overflow: hidden;
 }
 
@@ -192,19 +223,33 @@ export default {
 
 .plan-header {
 	display: flex;
-	align-items: baseline;
-	gap: 10rpx;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12rpx;
+	margin-top: 8rpx;
 }
 
-.plan-level {
-	font-size: 52rpx;
-	font-weight: 700;
-	line-height: 1;
+.plan-name-wrap {
+	display: flex;
+	flex-direction: column;
+	gap: 8rpx;
 }
 
 .plan-name {
-	font-size: 26rpx;
+	font-size: 30rpx;
+	font-weight: 600;
 	opacity: 0.96;
+}
+
+.plan-sub {
+	font-size: 22rpx;
+	opacity: 0.84;
+}
+
+.plan-level {
+	font-size: 56rpx;
+	font-weight: 700;
+	line-height: 1;
 }
 
 .plan-price-wrap {
@@ -231,13 +276,16 @@ export default {
 
 .current-tag {
 	position: absolute;
-	top: 24rpx;
-	right: 24rpx;
-	padding: 8rpx 14rpx;
-	border-radius: 999rpx;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, -24%);
+	padding: 9rpx 22rpx 14rpx;
+	border-radius: 0 0 18rpx 18rpx;
 	font-size: 20rpx;
-	background: rgba(255, 255, 255, 0.22);
-	border: 1px solid rgba(255, 255, 255, 0.32);
+	background: rgba(255, 255, 255, 0.26);
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	border-top: none;
+	box-shadow: 0 6rpx 12rpx rgba(16, 20, 43, 0.2);
 }
 
 .dots {
@@ -319,6 +367,11 @@ export default {
 	font-weight: 600;
 	color: #2a1c03;
 	background: linear-gradient(135deg, #ffd66f 0%, #ffebaf 100%);
+}
+
+.buy-btn.disabled {
+	color: #717888;
+	background: linear-gradient(135deg, #cfd5e6 0%, #e3e7f2 100%);
 }
 
 .buy-btn::after {
