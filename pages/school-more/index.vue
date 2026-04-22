@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style>
-.school-more-page { min-height: 100vh; padding: 24rpx 24rpx 140rpx; background: #f3f6ff; box-sizing: border-box; }
+.school-more-page { min-height: 100vh; padding: 24rpx 24rpx 120rpx; background: #f3f6ff; box-sizing: border-box; }
 .toolbar-card { background: #fff; border-radius: 20rpx; padding: 20rpx; box-shadow: 0 8rpx 22rpx rgba(43, 66, 138, 0.08); }
 .search-row { display: flex; align-items: center; gap: 10rpx; height: 76rpx; background: #f5f7ff; border-radius: 14rpx; padding: 0 16rpx; }
 .search-input { flex: 1; font-size: 24rpx; color: #1f2333; }
