@@ -19,6 +19,20 @@
 					<uni-icons type="bottom" size="13" color="#4a64ff" />
 				</view>
 			</view>
+			<view v-if="activeFilter" class="dropdown-panel">
+				<view class="dropdown-title">{{ currentFilterLabel }}</view>
+				<view class="dropdown-options">
+					<view
+						v-for="item in currentOptions"
+						:key="item"
+						class="dropdown-option"
+						:class="{ active: currentValue === item }"
+						@click="selectFilter(item)"
+					>
+						{{ item }}
+					</view>
+				</view>
+			</view>
 		</view>
 
 		<view class="result-head">
@@ -46,23 +60,6 @@
 		</view>
 
 		<view v-if="!filteredSchools.length" class="empty">未找到匹配学校，请更换筛选条件</view>
-
-		<view v-if="activeFilter" class="filter-mask" @click="closeFilter">
-			<view class="filter-popup" @click.stop>
-				<view class="popup-title">{{ currentFilterLabel }}</view>
-				<view class="popup-options">
-					<view
-						v-for="item in currentOptions"
-						:key="item"
-						class="popup-option"
-						:class="{ active: currentValue === item }"
-						@click="selectFilter(item)"
-					>
-						{{ item }}
-					</view>
-				</view>
-			</view>
-		</view>
 	</view>
 </template>
 
@@ -118,7 +115,7 @@ export default {
 	},
 	methods: {
 		openFilter(type) {
-			this.activeFilter = type
+			this.activeFilter = this.activeFilter === type ? '' : type
 		},
 		closeFilter() {
 			this.activeFilter = ''
@@ -138,12 +135,17 @@ export default {
 
 <style>
 .school-more-page { min-height: 100vh; padding: 24rpx; background: #f3f6ff; box-sizing: border-box; }
-.toolbar-card { background: #fff; border-radius: 20rpx; padding: 20rpx; box-shadow: 0 8rpx 22rpx rgba(43, 66, 138, 0.08); }
+.toolbar-card { position: relative; background: #fff; border-radius: 20rpx; padding: 20rpx; box-shadow: 0 8rpx 22rpx rgba(43, 66, 138, 0.08); }
 .search-row { display: flex; align-items: center; gap: 10rpx; height: 76rpx; background: #f5f7ff; border-radius: 14rpx; padding: 0 16rpx; }
 .search-input { flex: 1; font-size: 24rpx; color: #1f2333; }
 .placeholder { color: #9aa2b8; }
 .filter-row { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 10rpx; }
 .filter-trigger { display: inline-flex; align-items: center; gap: 4rpx; padding: 8rpx 16rpx; border-radius: 999rpx; font-size: 22rpx; color: #4a64ff; background: #e9edff; }
+.dropdown-panel { position: absolute; left: 20rpx; right: 20rpx; top: 146rpx; z-index: 20; background: #f5f7ff; border: 1rpx solid #e4e9fb; border-radius: 16rpx; padding: 14rpx; box-sizing: border-box; }
+.dropdown-title { font-size: 23rpx; color: #5f6985; margin-bottom: 12rpx; }
+.dropdown-options { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.dropdown-option { font-size: 22rpx; color: #616a80; background: #ffffff; border-radius: 999rpx; padding: 8rpx 18rpx; border: 1rpx solid #edf0fb; }
+.dropdown-option.active { color: #3154ff; border-color: #cdd8ff; background: #eef2ff; font-weight: 600; }
 .result-head { font-size: 23rpx; color: #6f7892; margin: 20rpx 4rpx 14rpx; }
 .school-list { display: flex; flex-direction: column; gap: 16rpx; }
 .school-card { display: flex; align-items: center; gap: 24rpx; padding: 26rpx; border-radius: 20rpx; background: #fff; box-shadow: 0 8rpx 20rpx rgba(37, 56, 120, 0.07); }
@@ -162,10 +164,4 @@ export default {
 .tag-purple { color: #7d57f8; background: #f1ecff; }
 .address { margin-top: 12rpx; font-size: 22rpx; color: #6f7892; line-height: 1.5; }
 .empty { margin-top: 100rpx; text-align: center; color: #97a0b8; font-size: 24rpx; }
-.filter-mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 90; background: rgba(20, 30, 58, 0.26); display: flex; align-items: flex-end; }
-.filter-popup { width: 100%; border-radius: 28rpx 28rpx 0 0; background: #fff; padding: 26rpx 24rpx 40rpx; box-sizing: border-box; max-height: 58vh; }
-.popup-title { font-size: 30rpx; font-weight: 600; color: #1f2333; }
-.popup-options { margin-top: 16rpx; display: flex; flex-wrap: wrap; gap: 12rpx; overflow-y: auto; }
-.popup-option { font-size: 23rpx; color: #616a80; background: #f4f6fb; border-radius: 999rpx; padding: 10rpx 22rpx; }
-.popup-option.active { color: #3154ff; background: #e8edff; font-weight: 600; }
 </style>
