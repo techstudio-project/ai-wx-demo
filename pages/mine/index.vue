@@ -157,7 +157,7 @@ export default {
 <style>
 .mine-page {
 	min-height: 100vh;
-	padding: 30rpx 24rpx 200rpx;
+	padding: 30rpx 24rpx 150rpx;
 	background: linear-gradient(180deg, #f3f6ff 0%, #f7f8fa 40%, #f6f6f6 100%);
 	box-sizing: border-box;
 }

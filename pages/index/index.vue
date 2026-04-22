@@ -20,7 +20,6 @@
 			<view class="section-head">
 				<view>
 					<text class="section-title">名校专区</text>
-					<text class="section-sub">精选优质学校，一键快速筛选</text>
 				</view>
 				<view class="more-chip" @click="goSchoolMore">
 					<text>查看全部</text>
@@ -58,12 +57,10 @@
 			</view>
 		</view>
 
-		<bottom-nav active="home" />
 	</view>
 </template>
 
 <script>
-import BottomNav from '@/components/bottom-nav.vue'
 
 export default {
 	components: { BottomNav },
