@@ -31,6 +31,12 @@
 			}
 		},
 		{
+			"path": "pages/my-orders/index",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
 			"path": "pages/points-record/index",
 			"style": {
 				"navigationBarTitleText": "积分记录"
