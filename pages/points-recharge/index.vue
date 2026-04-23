@@ -30,9 +30,9 @@
 			</view>
 		</view>
 
-		<view class="pay-bar common-paybar">
-			<view class="pay-info common-pay-price">¥{{ selectedPlan.amount }}</view>
-			<button class="pay-btn common-pay-btn" @click="payNow">立即支付</button>
+		<view class="pay-bar">
+			<view class="pay-info">实付 ¥{{ selectedPlan.amount }}</view>
+			<button class="pay-btn" @click="payNow">立即支付</button>
 		</view>
 	</view>
 </template>
@@ -44,10 +44,10 @@ export default {
 			selectedAmount: 200,
 			rechargeOptions: [
 				{ amount: 100, points: 100, tag: '' },
-				{ amount: 200, points: 200, tag: '' },
-				{ amount: 300, points: 300, tag: '' },
-				{ amount: 500, points: 500, tag: '' },
-				{ amount: 1000, points: 1000, tag: '' }
+				{ amount: 200, points: 210, tag: '热门' },
+				{ amount: 300, points: 320, tag: '' },
+				{ amount: 500, points: 550, tag: '推荐' },
+				{ amount: 1000, points: 1150, tag: '超值' }
 			]
 		}
 	},
@@ -172,11 +172,39 @@ export default {
 	color: #3f56f4;
 }
 
-.pay-bar { }
+.pay-bar {
+	position: fixed;
+	left: 24rpx;
+	right: 24rpx;
+	bottom: 28rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16rpx 16rpx 16rpx 22rpx;
+	border-radius: 20rpx;
+	background: rgba(18, 23, 39, 0.92);
+	box-shadow: 0 10rpx 28rpx rgba(11, 14, 24, 0.34);
+}
 
-.pay-info { }
+.pay-info {
+	font-size: 30rpx;
+	font-weight: 600;
+	color: #fff;
+}
 
-.pay-btn { }
+.pay-btn {
+	margin: 0;
+	height: 72rpx;
+	line-height: 72rpx;
+	padding: 0 36rpx;
+	border-radius: 999rpx;
+	font-size: 28rpx;
+	font-weight: 600;
+	color: #2d2200;
+	background: linear-gradient(135deg, #ffd66f 0%, #ffebb0 100%);
+}
 
-
+.pay-btn::after {
+	border: none;
+}
 </style>

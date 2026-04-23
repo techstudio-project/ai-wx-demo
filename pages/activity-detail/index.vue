@@ -15,15 +15,16 @@
 
 		<view class="safe-space"></view>
 
-		<view class="purchase-bar common-paybar">
+		<view class="purchase-bar">
 			<view class="share-box" @click="handleShare">
 				<uni-icons type="redo" size="18" color="#65708d"></uni-icons>
 				<text>分享</text>
 			</view>
 			<view class="price-box">
-				<text class="current-price common-pay-price">¥{{ activity.fee }}</text>
-				</view>
-			<button class="buy-btn common-pay-btn" @click="handleSignup">立即报名</button>
+				<text class="current-price">¥{{ activity.fee }}</text>
+				<text class="origin-price">¥{{ activity.originFee }}</text>
+			</view>
+			<button class="buy-btn" @click="handleSignup">立即报名</button>
 		</view>
 	</view>
 </template>
@@ -37,7 +38,8 @@ export default {
 				status: '报名中',
 				endAt: '2026-05-20 20:00:00',
 				fee: '99.00',
-								detailHtml:
+				originFee: '199.00',
+				detailHtml:
 					'<div style="line-height:1.9;color:#4f5a76;font-size:14px;">' +
 					'<p><strong>活动亮点</strong></p>' +
 					'<p>1. 名校名师直播串讲，覆盖语数英物化核心高频考点；</p>' +
@@ -108,9 +110,11 @@ export default {
 .detail-title { font-size: 28rpx; color: #1f2433; font-weight: 700; }
 .detail-richtext { margin-top: 14rpx; }
 .safe-space { height: 140rpx; }
-.purchase-bar { }
+.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; height: 112rpx; padding: 0 28rpx; box-sizing: border-box; }
 .share-box { width: 94rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
 .price-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .current-price { font-size: 36rpx; font-weight: 700; color: #ff4c4f; line-height: 1.2; }
-.buy-btn { }
+.origin-price { font-size: 20rpx; color: #98a2b8; text-decoration: line-through; }
+.buy-btn { height: 64rpx; line-height: 64rpx; padding: 0 34rpx; border-radius: 999rpx; font-size: 26rpx; color: #fff; background: linear-gradient(135deg, #4f7bff, #3f67f3); }
+.buy-btn::after { border: none; }
 </style>
