@@ -28,15 +28,16 @@
 
 		<view class="safe-space"></view>
 
-		<view class="purchase-bar common-paybar">
+		<view class="purchase-bar">
 			<view class="share-box" @click="handleShare">
 				<uni-icons type="redo" size="18" color="#65708d"></uni-icons>
 				<text>分享</text>
 			</view>
 			<view class="price-box">
-				<text class="current-price common-pay-price">¥{{ detail.price }}</text>
-				</view>
-			<button class="buy-btn common-pay-btn" @click="handleBuy">立即购买</button>
+				<text class="current-price">¥{{ detail.price }}</text>
+				<text class="origin-price">¥{{ detail.originPrice }}</text>
+			</view>
+			<button class="buy-btn" @click="handleBuy">立即购买</button>
 		</view>
 	</view>
 </template>
@@ -48,7 +49,8 @@ export default {
 			detail: {
 				name: '高三化学实验与反应原理专题卷',
 				price: '11.60',
-								date: '2026-03-30',
+				originPrice: '18.80',
+				date: '2026-03-30',
 				pages: 14,
 				views: 1468,
 				size: '3.8MB'
@@ -101,9 +103,11 @@ export default {
 .page-index { margin-top: 10rpx; display: block; font-size: 21rpx; color: #75819b; text-align: center; }
 .preview-tip { background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; margin-bottom: 28rpx; }
 .safe-space { height: 140rpx; }
-.purchase-bar { }
+.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; height: 112rpx; padding: 0 28rpx; box-sizing: border-box; }
 .share-box { width: 94rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
 .price-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .current-price { font-size: 36rpx; font-weight: 700; color: #ff4c4f; line-height: 1.2; }
-.buy-btn { }
+.origin-price { font-size: 20rpx; color: #98a2b8; text-decoration: line-through; }
+.buy-btn { height: 64rpx; line-height: 64rpx; padding: 0 34rpx; border-radius: 999rpx; font-size: 26rpx; color: #fff; background: linear-gradient(135deg, #4f7bff, #3f67f3); }
+.buy-btn::after { border: none; }
 </style>

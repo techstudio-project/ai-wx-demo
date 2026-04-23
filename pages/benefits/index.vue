@@ -52,9 +52,9 @@
 			</view>
 		</view>
 
-		<view class="buy-bar common-paybar">
-			<view class="buy-price common-pay-price">¥{{ activePlan.price }}</view>
-			<button class="buy-btn common-pay-btn" :class="{ disabled: !canPurchaseActivePlan }" @click="buyMembership">
+		<view class="buy-bar">
+			<view class="buy-price">¥{{ activePlan.price }} / {{ activePlan.period }}</view>
+			<button class="buy-btn" :class="{ disabled: !canPurchaseActivePlan }" @click="buyMembership">
 				{{ buyButtonText }}
 			</button>
 		</view>
@@ -336,16 +336,45 @@ export default {
 	color: #3d455b;
 }
 
-.buy-bar { }
+.buy-bar {
+	position: fixed;
+	left: 24rpx;
+	right: 24rpx;
+	bottom: 28rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 18rpx 18rpx 18rpx 24rpx;
+	border-radius: 20rpx;
+	background: rgba(20, 25, 43, 0.92);
+	backdrop-filter: blur(10rpx);
+	box-shadow: 0 10rpx 30rpx rgba(10, 13, 27, 0.34);
+}
 
-.buy-price { }
+.buy-price {
+	font-size: 30rpx;
+	font-weight: 600;
+	color: #ffffff;
+}
 
-.buy-btn { }
+.buy-btn {
+	margin: 0;
+	padding: 0 38rpx;
+	height: 72rpx;
+	line-height: 72rpx;
+	border-radius: 999rpx;
+	font-size: 28rpx;
+	font-weight: 600;
+	color: #2a1c03;
+	background: linear-gradient(135deg, #ffd66f 0%, #ffebaf 100%);
+}
 
 .buy-btn.disabled {
 	color: #717888;
 	background: linear-gradient(135deg, #cfd5e6 0%, #e3e7f2 100%);
 }
 
-
+.buy-btn::after {
+	border: none;
+}
 </style>
