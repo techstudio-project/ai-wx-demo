@@ -93,7 +93,10 @@
 					<text class="price">¥{{ item.price }}</text>
 					<view class="stats-row">
 						<view class="stats-left">
-							<text class="views-text">{{ item.views }}人浏览</text>
+							<view class="views-wrap">
+								<uni-icons type="eye" size="14" color="#8f9bb2"></uni-icons>
+								<text class="views-text">{{ item.views }}人浏览</text>
+							</view>
 							<view class="page-wrap">
 								<text class="page-icon">📄</text>
 								<text>{{ item.pages }}页</text>
@@ -226,11 +229,12 @@ export default {
 .question-list { margin-top: 16rpx; display: flex; flex-direction: column; gap: 16rpx; }
 .question-card { display: flex; gap: 16rpx; padding: 18rpx; border-radius: 18rpx; background: #ffffff; box-shadow: 0 10rpx 30rpx rgba(17, 33, 84, 0.06); }
 .thumb { width: 172rpx; height: 172rpx; border-radius: 14rpx; background: #eef1f9; }
-.card-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.name { font-size: 28rpx; font-weight: 600; color: #1f2433; line-height: 1.45; }
-.price { margin-top: 10rpx; font-size: 34rpx; font-weight: 700; color: #ff4c4f; }
+.card-main { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; min-height: 172rpx; }
+.name { font-size: 28rpx; font-weight: 600; color: #1f2433; line-height: 1.45; min-height: 80rpx; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.price { font-size: 34rpx; font-weight: 700; color: #ff4c4f; }
 .stats-row { margin-top: 12rpx; display: flex; align-items: center; justify-content: space-between; gap: 10rpx; }
 .stats-left { display: flex; align-items: center; gap: 20rpx; color: #8f9bb2; font-size: 22rpx; }
+.views-wrap { display: flex; align-items: center; gap: 6rpx; }
 .page-wrap { display: flex; align-items: center; gap: 6rpx; }
 .page-icon { font-size: 20rpx; line-height: 1; }
 .date { font-size: 22rpx; color: #78829a; }
