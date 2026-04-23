@@ -13,6 +13,12 @@
 			}
 		},
 		{
+			"path": "pages/paper-detail/index",
+			"style": {
+				"navigationBarTitleText": "试卷详情"
+			}
+		},
+		{
 			"path": "pages/benefits/index",
 			"style": {
 				"navigationBarTitleText": "会员权益"
@@ -22,6 +28,12 @@
 			"path": "pages/profile/index",
 			"style": {
 				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/my-orders/index",
+			"style": {
+				"navigationBarTitleText": "我的订单"
 			}
 		},
 		{
