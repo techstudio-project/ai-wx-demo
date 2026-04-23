@@ -93,7 +93,7 @@ export default {
 .title { font-size: 34rpx; font-weight: 700; color: #1f2433; line-height: 1.5; }
 .meta-row { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 18rpx; font-size: 22rpx; color: #7a859d; }
 .divider { height: 2rpx; background: #e8edf7; margin: 20rpx 0; }
-.preview-section { background: #fff; border-radius: 18rpx; padding: 20rpx; box-shadow: 0 8rpx 24rpx rgba(26, 43, 90, 0.06); }
+.preview-section { background: #fff; border-radius: 18rpx; padding: 20rpx; box-shadow: 0 8rpx 24rpx rgba(26, 43, 90, 0.06); margin-bottom: 24rpx; }
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14rpx; }
 .section-title { font-size: 28rpx; font-weight: 700; color: #1f2433; }
 .section-sub { font-size: 22rpx; color: #8d98b1; }
@@ -101,13 +101,13 @@ export default {
 .preview-page:last-child { margin-bottom: 0; }
 .preview-img { width: 100%; border-radius: 10rpx; }
 .page-index { margin-top: 10rpx; display: block; font-size: 21rpx; color: #75819b; text-align: center; }
-.preview-tip { margin-top: 18rpx; background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; }
-.safe-space { height: 140rpx; }
-.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 14rpx; padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
-.share-box { width: 110rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
+.preview-tip { background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; }
+.safe-space { height: 116rpx; }
+.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; padding: 10rpx 24rpx calc(10rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.share-box { width: 94rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
 .price-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .current-price { font-size: 36rpx; font-weight: 700; color: #ff4c4f; line-height: 1.2; }
 .origin-price { font-size: 20rpx; color: #98a2b8; text-decoration: line-through; }
-.buy-btn { height: 74rpx; line-height: 74rpx; padding: 0 38rpx; border-radius: 999rpx; font-size: 26rpx; color: #fff; background: linear-gradient(135deg, #4f7bff, #3f67f3); }
+.buy-btn { height: 64rpx; line-height: 64rpx; padding: 0 34rpx; border-radius: 999rpx; font-size: 26rpx; color: #fff; background: linear-gradient(135deg, #4f7bff, #3f67f3); }
 .buy-btn::after { border: none; }
 </style>
