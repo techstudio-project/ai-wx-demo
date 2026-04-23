@@ -13,6 +13,12 @@
 			}
 		},
 		{
+			"path": "pages/paper-detail/index",
+			"style": {
+				"navigationBarTitleText": "试卷详情"
+			}
+		},
+		{
 			"path": "pages/benefits/index",
 			"style": {
 				"navigationBarTitleText": "会员权益"
@@ -22,6 +28,24 @@
 			"path": "pages/profile/index",
 			"style": {
 				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/my-orders/index",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/checkout/index",
+			"style": {
+				"navigationBarTitleText": "订单结算"
+			}
+		},
+		{
+			"path": "pages/pay-result/index",
+			"style": {
+				"navigationBarTitleText": "支付结果"
 			}
 		},
 		{
