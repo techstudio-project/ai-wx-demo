@@ -83,8 +83,11 @@ export default {
 		cancelOrder() {
 			uni.showToast({ title: '订单已取消', icon: 'none' })
 		},
-		payNow() {
-			uni.showToast({ title: '跳转支付中', icon: 'none' })
+		payNow(order) {
+			const type = order.type.includes('活动') ? 'activity' : 'paper'
+			uni.navigateTo({
+				url: `/pages/checkout/index?type=${type}&title=${encodeURIComponent(order.title)}&price=${order.price}&cover=${encodeURIComponent(order.cover)}`
+			})
 		},
 		downloadNow() {
 			uni.showToast({ title: '下载任务已创建', icon: 'none' })

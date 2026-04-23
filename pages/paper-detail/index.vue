@@ -80,7 +80,9 @@ export default {
 			uni.showToast({ title: '分享功能开发中', icon: 'none' })
 		},
 		handleBuy() {
-			uni.showToast({ title: '已加入购买流程', icon: 'none' })
+			uni.navigateTo({
+				url: `/pages/checkout/index?type=paper&title=${encodeURIComponent(this.detail.name)}&price=${this.detail.price}`
+			})
 		}
 	}
 }

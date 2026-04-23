@@ -89,7 +89,9 @@ export default {
 			uni.showToast({ title: '分享功能开发中', icon: 'none' })
 		},
 		handleSignup() {
-			uni.showToast({ title: '报名流程已开启', icon: 'none' })
+			uni.navigateTo({
+				url: `/pages/checkout/index?type=activity&title=${encodeURIComponent(this.activity.name)}&price=${this.activity.fee}`
+			})
 		}
 	}
 }

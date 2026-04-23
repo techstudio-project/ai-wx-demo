@@ -37,6 +37,18 @@
 			}
 		},
 		{
+			"path": "pages/checkout/index",
+			"style": {
+				"navigationBarTitleText": "订单结算"
+			}
+		},
+		{
+			"path": "pages/pay-result/index",
+			"style": {
+				"navigationBarTitleText": "支付结果"
+			}
+		},
+		{
 			"path": "pages/points-record/index",
 			"style": {
 				"navigationBarTitleText": "积分记录"
