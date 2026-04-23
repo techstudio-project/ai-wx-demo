@@ -47,12 +47,12 @@
 		</view>
 
 		<view class="safe-space"></view>
-		<view class="bottom-bar">
+		<view class="bottom-bar common-paybar">
 			<view class="bottom-price">
 				<text>合计：</text>
-				<text class="price">¥{{ payableAmount.toFixed(2) }}</text>
+				<text class="price common-pay-price">¥{{ payableAmount.toFixed(2) }}</text>
 			</view>
-			<button class="pay-btn" @click="submitPayment">立即支付</button>
+			<button class="pay-btn common-pay-btn" @click="submitPayment">立即支付</button>
 		</view>
 
 		<uni-popup ref="payPopup" type="bottom" background-color="#fff">
@@ -161,11 +161,11 @@ export default {
 .total { margin-top: 6rpx; padding-top: 12rpx; border-top: 1px dashed #e9edf7; }
 .payable { color: #ff4c4f; font-size: 34rpx; font-weight: 700; }
 .safe-space { height: 130rpx; }
-.bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e9edf7; padding: 14rpx 20rpx calc(14rpx + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 14rpx; }
+.bottom-bar { }
 .bottom-price { flex: 1; font-size: 24rpx; color: #5d6883; }
-.bottom-price .price { font-size: 36rpx; color: #ff4c4f; font-weight: 700; }
-.pay-btn { height: 72rpx; line-height: 72rpx; border-radius: 999rpx; background: linear-gradient(135deg, #4f7bff, #3f67f3); color: #fff; font-size: 26rpx; padding: 0 38rpx; }
-.pay-btn::after, .popup-btn::after { border: none; }
+.bottom-price .price { }
+.pay-btn { }
+.popup-btn::after { border: none; }
 .pay-popup { padding: 26rpx 24rpx 30rpx; }
 .popup-title { text-align: center; display: block; font-size: 28rpx; color: #1f2433; font-weight: 700; }
 .popup-row { margin-top: 18rpx; display: flex; gap: 12rpx; }
