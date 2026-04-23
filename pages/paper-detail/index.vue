@@ -100,8 +100,8 @@ export default {
 .preview-img { width: 100%; border-radius: 10rpx; }
 .page-index { margin-top: 10rpx; display: block; font-size: 21rpx; color: #75819b; text-align: center; }
 .preview-tip { background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; margin-bottom: 28rpx; }
-.safe-space { height: 132rpx; }
-.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; height: 104rpx; padding: 0 24rpx; box-sizing: border-box; }
+.safe-space { height: 140rpx; }
+.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; height: 112rpx; padding: 0 28rpx; box-sizing: border-box; }
 .share-box { width: 94rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
 .price-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .current-price { font-size: 36rpx; font-weight: 700; color: #ff4c4f; line-height: 1.2; }
