@@ -15,7 +15,6 @@
 		<view class="preview-section">
 			<view class="section-head">
 				<text class="section-title">试卷预览</text>
-				<text class="section-sub">仅展示前2页</text>
 			</view>
 			<view class="preview-page" v-for="(img, idx) in previewImages" :key="img">
 				<image :src="img" mode="widthFix" class="preview-img"></image>
@@ -91,19 +90,18 @@ export default {
 .paper-detail-page { min-height: 100vh; background: #f5f7fb; padding: 24rpx; box-sizing: border-box; }
 .header-card { background: #fff; border-radius: 18rpx; padding: 24rpx; box-shadow: 0 8rpx 24rpx rgba(26, 43, 90, 0.06); }
 .title { font-size: 34rpx; font-weight: 700; color: #1f2433; line-height: 1.5; }
-.meta-row { margin-top: 14rpx; display: flex; flex-wrap: wrap; gap: 18rpx; font-size: 22rpx; color: #7a859d; }
+.meta-row { margin-top: 16rpx; display: flex; flex-wrap: wrap; gap: 26rpx; font-size: 22rpx; color: #7a859d; line-height: 1.8; }
 .divider { height: 2rpx; background: #e8edf7; margin: 20rpx 0; }
 .preview-section { background: #fff; border-radius: 18rpx; padding: 20rpx; box-shadow: 0 8rpx 24rpx rgba(26, 43, 90, 0.06); margin-bottom: 24rpx; }
-.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14rpx; }
+.section-head { display: flex; align-items: center; margin-bottom: 14rpx; }
 .section-title { font-size: 28rpx; font-weight: 700; color: #1f2433; }
-.section-sub { font-size: 22rpx; color: #8d98b1; }
 .preview-page { margin-bottom: 18rpx; background: #f8faff; border-radius: 12rpx; padding: 12rpx; }
 .preview-page:last-child { margin-bottom: 0; }
 .preview-img { width: 100%; border-radius: 10rpx; }
 .page-index { margin-top: 10rpx; display: block; font-size: 21rpx; color: #75819b; text-align: center; }
-.preview-tip { background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; }
-.safe-space { height: 116rpx; }
-.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; padding: 10rpx 24rpx calc(10rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.preview-tip { background: #fff8eb; color: #af7d22; font-size: 23rpx; padding: 16rpx 18rpx; border-radius: 12rpx; line-height: 1.6; margin-bottom: 28rpx; }
+.safe-space { height: 132rpx; }
+.purchase-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #ebeff8; display: flex; align-items: center; gap: 12rpx; height: 104rpx; padding: 0 24rpx; box-sizing: border-box; }
 .share-box { width: 94rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 21rpx; color: #65708d; }
 .price-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .current-price { font-size: 36rpx; font-weight: 700; color: #ff4c4f; line-height: 1.2; }
