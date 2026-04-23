@@ -86,7 +86,7 @@
 		</view>
 
 		<view class="question-list">
-			<view class="question-card" v-for="item in filteredQuestions" :key="item.id">
+			<view class="question-card" v-for="item in filteredQuestions" :key="item.id" @click="goDetail(item)">
 				<image class="thumb" :src="item.thumb" mode="aspectFill"></image>
 				<view class="card-main">
 					<text class="name">{{ item.name }}</text>
@@ -201,6 +201,9 @@ export default {
 		},
 		closeFilterDrawer() {
 			this.$refs.filterDrawer.close()
+		},
+		goDetail(item) {
+			uni.navigateTo({ url: `/pages/paper-detail/index?name=${encodeURIComponent(item.name)}&price=${item.price}&date=${item.date}&pages=${item.pages}&views=${item.views}` })
 		}
 	}
 }
